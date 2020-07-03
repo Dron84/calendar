@@ -21,37 +21,9 @@
       </header>
       <div class="body">
         <div class="item none" v-for="i in miss" :key="i"></div>
-        <div class="item"><span class="day">1</span></div>
-        <div class="item"><span class="day">2</span></div>
-        <div class="item"><span class="day">3</span></div>
-        <div class="item"><span class="day">4</span></div>
-        <div class="item"><span class="day">5</span></div>
-        <div class="item"><span class="day">6</span></div>
-        <div class="item"><span class="day">7</span></div>
-        <div class="item"><span class="day">8</span></div>
-        <div class="item"><span class="day">9</span></div>
-        <div class="item"><span class="day">10</span></div>
-        <div class="item"><span class="day">11</span></div>
-        <div class="item"><span class="day">12</span></div>
-        <div class="item"><span class="day">13</span></div>
-        <div class="item"><span class="day">14</span></div>
-        <div class="item"><span class="day">15</span></div>
-        <div class="item"><span class="day">16</span></div>
-        <div class="item"><span class="day">17</span></div>
-        <div class="item"><span class="day">18</span></div>
-        <div class="item"><span class="day">19</span></div>
-        <div class="item"><span class="day">20</span></div>
-        <div class="item"><span class="day">21</span></div>
-        <div class="item"><span class="day">22</span></div>
-        <div class="item"><span class="day">23</span></div>
-        <div class="item"><span class="day">24</span></div>
-        <div class="item"><span class="day">25</span></div>
-        <div class="item"><span class="day">26</span></div>
-        <div class="item"><span class="day">27</span></div>
-        <div class="item"><span class="day">28</span></div>
-        <div class="item"><span class="day">29</span></div>
-        <div class="item"><span class="day">30</span></div>
-        <div class="item"><span class="day">31</span></div>
+        <div class="item" v-for="i in dayInMounth" :key="i + dayInMounth">
+          <span class="day">{{ i }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -66,7 +38,6 @@ export default {
   components: { dates },
   data: () => ({
     miss: null,
-    daysInMounths: null,
     daysTitle: [
       { nameEng: "Mon", nameRu: "ПН", index: 0 },
       { nameEng: "Tue", nameRu: "ВТ", index: 1 },
@@ -85,18 +56,27 @@ export default {
       return !this.isEmptyObject(find) && find[0].index;
     },
     update() {
-      const dateNew = new Date(
-        `${this.date.year}-${this.date.mounth}-01`
-      ).toString();
-      const reg = /(\w+)\s/gi;
-      const begin = dateNew.match(reg)[0].trim();
-      this.miss = this.getIndexByDaysTitle(begin);
-      // console.log(begin, this.date);
+      if (!this.isEmptyObject(this.date)) {
+        const dateNew = new Date(
+          `${this.date.year}-${this.date.mounth}-01`
+        ).toString();
+        const reg = /(\w+)\s/gi;
+        const begin = dateNew.match(reg)[0].trim();
+        this.miss = this.getIndexByDaysTitle(begin);
+        console.log(begin, this.date);
+      }
     }
   },
   computed: {
-    dayInMounth(date) {
-      return moment(`${date.year}-${date.mounth}`, "YYYY-MM").daysInMonth();
+    dayInMounth() {
+      if (!this.isEmptyObject(this.date)) {
+        return moment(
+          `${this.date.year}-${this.date.mounth}`,
+          "YYYY-MM"
+        ).daysInMonth();
+      } else {
+        return null;
+      }
     },
     date: {
       get() {
@@ -106,6 +86,9 @@ export default {
         this.commit("date", val);
       }
     }
+  },
+  mounted() {
+    this.update();
   }
 };
 </script>

@@ -73,6 +73,7 @@ export default {
   created() {
     this.mounth = Number(moment().format("MM"));
     this.year = moment().format("YYYY");
+    this.emit();
   }
 };
 </script>
