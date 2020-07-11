@@ -5,9 +5,7 @@
         <img src="https://nadezhda-kalinina.com/img/icon/logo.svg" />
       </div>
       <div class="info">
-        <h1>
-          Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.
-        </h1>
+        <h1>Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.</h1>
         <dates @updateChanges="update()" />
       </div>
     </div>
@@ -15,14 +13,16 @@
     <div class="wrapper">
       <aside></aside>
       <header>
-        <span v-for="day in Array.from(daysTitle)" :key="day.index">{{
+        <span v-for="day in Array.from(daysTitle)" :key="day.index">
+          {{
           day.nameRu
-        }}</span>
+          }}
+        </span>
       </header>
       <div class="body">
         <div class="item none" v-for="i in miss" :key="i"></div>
         <div class="item" v-for="i in dayInMounth" :key="i + dayInMounth">
-          <span class="day">{{ i }}</span>
+          <ieroglifs :block="{data: {...getBasi()[i]}, index: i}" />
         </div>
       </div>
     </div>
@@ -32,10 +32,12 @@
 <script>
 import moment from "moment";
 import dates from "../components/dates";
+import bacziData from "../JS/bacziData";
+import ieroglifs from "../components/ieroglifs";
 
 export default {
   name: "calendar",
-  components: { dates },
+  components: { dates, ieroglifs },
   data: () => ({
     miss: null,
     daysTitle: [
@@ -46,9 +48,63 @@ export default {
       { nameEng: "Fri", nameRu: "ПТ", index: 4 },
       { nameEng: "Sat", nameRu: "СБ", index: 5 },
       { nameEng: "Sun", nameRu: "ВС", index: 6 }
-    ]
+    ],
+    bacziData
   }),
   methods: {
+    getBasi() {
+      const firstDayMouth = this.findDayFirstDayInMounth();
+      const getCorrectionNumber = num =>
+        num > 60 ? num - 60 : num < 0 ? 60 + num : num;
+      const getBacziInRange = (first, second) =>
+        this.bacziData.filter(item => item.id >= first && item.id <= second);
+
+      const getBacziArr = (firstDay, countOfDays) => {
+        if (60 - countOfDays > firstDay) {
+          return getBacziInRange(firstDay, firstDay + countOfDays);
+        } else {
+          const secondMax = getCorrectionNumber(
+            firstDayMouth + this.dayInMounth
+          );
+          const firstArr = getBacziInRange(firstDay, 60);
+          const lastArr = getBacziInRange(0, secondMax);
+          return [...firstArr, ...lastArr];
+        }
+      };
+      return getBacziArr(firstDayMouth, this.dayInMounth);
+    },
+    findDayFirstDayInMounth() {
+      const dayCalibration = 17;
+      const oneDayMsec = 24 * 3600;
+      const oneD = moment("1970/01/01").unix();
+      const TwoD = moment(`${this.date.year}/${this.date.mounth}/01`).unix();
+      let day = (Number(TwoD) - Number(oneD)) / Number(oneDayMsec);
+      let operand;
+      let days;
+      if (day < 0) {
+        operand = "-";
+        day = day * -1;
+      } else {
+        operand = "+";
+      }
+      let step = day / 60;
+
+      for (let i = 0; i < Math.floor(step); i++) {
+        day = day - 60;
+      }
+      if (operand == "-") {
+        days = dayCalibration - day;
+        if (days < 0) {
+          days = 60 + days;
+        }
+      } else if (operand == "+") {
+        days = dayCalibration + day;
+        if (days > 59) {
+          days = days - 60;
+        }
+      }
+      return days;
+    },
     getIndexByDaysTitle(dayTitle) {
       const find = this.daysTitle.filter(item =>
         item.nameEng === dayTitle ? true : false
@@ -63,7 +119,8 @@ export default {
         const reg = /(\w+)\s/gi;
         const begin = dateNew.match(reg)[0].trim();
         this.miss = this.getIndexByDaysTitle(begin);
-        console.log(begin, this.date);
+        this.getBasi();
+        // this.findDayFirstDayInMounth();
       }
     }
   },
@@ -149,7 +206,4 @@ export default {
           background-color: rgba($accent,.1)
         &.none
           background-color: rgba($item_none,.3)
-        .day
-          position: absolute
-          margin: 30px
 </style>
