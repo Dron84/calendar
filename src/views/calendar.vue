@@ -20,7 +20,7 @@
         </span>
       </header>
       <div class="body">
-        <div class="item none" v-for="i in miss" :key="i"></div>
+        <div class="item none" v-for="i in weekDay" :key="i"></div>
         <div class="item" v-for="i in dayInMounth" :key="i + dayInMounth">
           <ieroglifs :block="{data: {...getBasi()[i]}, index: i}" />
         </div>
@@ -42,13 +42,13 @@ export default {
   data: () => ({
     miss: null,
     daysTitle: [
-      { nameEng: "Mon", nameRu: "ПН", index: 0 },
-      { nameEng: "Tue", nameRu: "ВТ", index: 1 },
-      { nameEng: "Wed", nameRu: "СР", index: 2 },
-      { nameEng: "Thu", nameRu: "ЧТ", index: 3 },
-      { nameEng: "Fri", nameRu: "ПТ", index: 4 },
-      { nameEng: "Sat", nameRu: "СБ", index: 5 },
-      { nameEng: "Sun", nameRu: "ВС", index: 6 }
+      { nameEng: "Mon", nameRu: "ПН", index: 1 },
+      { nameEng: "Tue", nameRu: "ВТ", index: 2 },
+      { nameEng: "Wed", nameRu: "СР", index: 3 },
+      { nameEng: "Thu", nameRu: "ЧТ", index: 4 },
+      { nameEng: "Fri", nameRu: "ПТ", index: 5 },
+      { nameEng: "Sat", nameRu: "СБ", index: 6 },
+      { nameEng: "Sun", nameRu: "ВС", index: 7 }
     ],
     bacziData,
     mounthBegin
@@ -107,20 +107,8 @@ export default {
       }
       return days;
     },
-    getIndexByDaysTitle(dayTitle) {
-      const find = this.daysTitle.filter(item =>
-        item.nameEng === dayTitle ? true : false
-      );
-      return !this.isEmptyObject(find) && find[0].index;
-    },
     update() {
       if (!this.isEmptyObject(this.date)) {
-        const dateNew = new Date(
-          `${this.date.year}-${this.date.mounth}-01`
-        ).toString();
-        const reg = /(\w+)\s/gi;
-        const begin = dateNew.match(reg)[0].trim();
-        this.miss = this.getIndexByDaysTitle(begin);
         this.getBasi();
         this.findMounthAndYear();
         // this.findDayFirstDayInMounth();
@@ -233,12 +221,17 @@ export default {
     dayInMounth() {
       if (!this.isEmptyObject(this.date)) {
         return moment(
-          `${this.date.year}-${this.date.mounth}`,
-          "YYYY-MM"
+          `${this.date.year}/${this.date.mounth}`,
+          "YYYY/MM"
         ).daysInMonth();
       } else {
         return null;
       }
+    },
+    weekDay() {
+      return this.date
+        ? moment(`${this.date.year}/${this.date.mounth}/01`).isoWeekday() - 1
+        : null;
     },
     date: {
       get() {
