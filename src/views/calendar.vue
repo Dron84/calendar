@@ -34,6 +34,7 @@ import moment from "moment";
 import dates from "../components/dates";
 import bacziData from "../JS/bacziData";
 import ieroglifs from "../components/ieroglifs";
+import mounthBegin from "../JS/mounthbegin";
 
 export default {
   name: "calendar",
@@ -49,7 +50,8 @@ export default {
       { nameEng: "Sat", nameRu: "СБ", index: 5 },
       { nameEng: "Sun", nameRu: "ВС", index: 6 }
     ],
-    bacziData
+    bacziData,
+    mounthBegin
   }),
   methods: {
     getBasi() {
@@ -120,8 +122,111 @@ export default {
         const begin = dateNew.match(reg)[0].trim();
         this.miss = this.getIndexByDaysTitle(begin);
         this.getBasi();
+        this.findMounthAndYear();
         // this.findDayFirstDayInMounth();
       }
+    },
+    findMounthAndYear(timestamp, dateTime) {
+      console.log(timestamp, dateTime);
+      const year = this.date.year;
+      const yearBegin = this.mounthBegin[this.date.year][this.date.mounth - 1];
+      console.log("yearBegin", yearBegin, year);
+      // $yearCorrection = $yearBegin['correction'];
+      // $yearBegin = $yearBegin['1'];
+      // $yearBegin = $yearBegin['begin_date'];
+      // $yearBegin = explode(' ', $yearBegin);
+      // $yearBegin = $yearBegin[0] . '.' . $year . ' ' . $yearBegin[1];
+      // $yearBegin = strtotime($yearBegin);
+      // //	 echo '$yearBegin='.$yearBegin;
+      // $yearEnd = mounthData();
+      // $yearEnd = $yearEnd[(int)($year + 1)];
+      // $yearEnd = $yearEnd['1'];
+      // $yearEnd = $yearEnd['begin_date'];
+      // $yearEnd = explode(' ', $yearEnd);
+      // $yearEnd = $yearEnd[0] . '.' . (int)($year + 1) . ' ' . $yearEnd[1];
+      // $yearEnd = strtotime($yearEnd);
+      // $yearEnd = (int)($yearEnd - 1);
+      // //	 echo '$yearEnd='.$yearEnd;
+      // if ($timestamp < $yearBegin) {
+      // $lastYear =	mounthData();
+      // $ly = (int)($year - 1);
+      // $lastYear = $lastYear[$ly];
+      // // echo '$ly='.$ly;
+      // $january = $lastYear['11'];
+      // $january = $january['begin_date'];
+      // // echo '$january='.$january;
+      // $january = explode(' ', $january);
+      // // showArray($january);
+      // $january = '' . $january[0] . '.' . $ly . ' ' . $january[1];
+      // // echo '$january[0].$ly.$january[1];='.$january;
+      // $january = strtotime($january);
+      // $february = $lastYear['12'];
+      // $february = $february['begin_date'];
+      // // echo '$february='.$february;
+      // $february = explode(' ', $february);
+      // //		 showArray($february);
+      // $february = '' . $february[0] . '.' . $year . ' ' . $february[1];
+      // // echo ' $february[0].$ly.$february[1];='.$february;
+      // $february = strtotime($february);
+      // if ($timestamp <= $february) {
+      // $mounthCorrection = $lastYear['11']['mounth_correction'];
+      // $result[0] = correction($mounthCorrection);
+      // $result[1] = correction($lastYear['correction']);
+      // //			 showArray($result);
+      // //			 echo '<br>yanuary';
+      // } else if (($timestamp > $february) && ($timestamp <= $yearBegin)) {
+      // $mounthCorrection = $lastYear['12']['mounth_correction'];
+      // $result[0] = correction($mounthCorrection);
+      // $result[1] = correction($lastYear['correction']);
+      // //			 showArray($mounth);
+      // // echo '<br>february';
+      // }
+      // $result['china_real_year'] = $ly;
+      // } else if (($timestamp > $yearBegin) && ($timestamp < $yearEnd)) {
+      // $mounth = mounthData();
+      // $mounth = $mounth[$year];
+      // //		 showArray($mounth);
+      // $dateTime = explode(' ', $dateTime);
+      // $date = explode('.', $dateTime[0]);
+      // //		echo $date[1];
+      // $afterMounth = $mounth[(int)($date[1])];
+      // //		echo '<br>$afterMounth='.showArray($afterMounth);
+      // $mounth = $mounth[(int)($date[1] - 1)];
+      // //		 showArray($afterMounth);showArray($mounth);
+      // $mounthCorrection = $mounth['mounth_correction'];
+      // $mounth = $mounth['begin_date'];
+      // //		showArray($mounth);
+      // $mounth = explode(' ', $mounth);
+      // $mounth = '' . $mounth[0] . '.' . $year . ' ' . $mounth[1];
+      // //		 echo '<br>$mounth='.$mounth;
+      // $mounth = strtotime($mounth);
+      // //		 echo '<br>$mounth='.$mounth;
+      // $afterMounthCorrection = $afterMounth['mounth_correction'];
+      // $afterMounth = $afterMounth['begin_date'];
+      // $afterMounth = explode(' ', $afterMounth);
+      // $afterMounth = '' . $afterMounth[0] . '.' . $year . ' ' . $afterMounth[1];
+      // // echo '<br>$afterMounth='.$afterMounth;
+      // $afterMounth = strtotime($afterMounth);
+      // // echo '<br>$afterMounth='.$afterMounth;
+      // if (($timestamp > $mounth) && ($timestamp < $afterMounth)) {
+      // $result[0] = correction($mounthCorrection);
+      // $result[1] = correction($yearCorrection);
+      // //			 print_r($result);
+      // } else if ($timestamp > $afterMounth) {
+      // $result[0] = correctionPlus($afterMounthCorrection - 2);
+      // $result[1] = correction($yearCorrection);
+      // //			 print_r($result);
+      // }
+      // else if ($timestamp <= $mounth) {
+      // $result[0] = correction($mounthCorrection - 1);
+      // $result[1] = correction($yearCorrection);
+      // //					 print_r($result);
+      // //			 echo '<br>mounth2';
+      // }
+      // $result['china_real_year'] = $year;
+      // }
+      // // showArray( $result);
+      // return $result;
     }
   },
   computed: {
