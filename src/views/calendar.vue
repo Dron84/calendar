@@ -244,7 +244,6 @@ export default {
           }
         })
       }
-      console.log(calendar)
       return calendar
     }
 
@@ -257,7 +256,8 @@ export default {
       return this.date
         ? moment(`${this.date.year}/${this.date.mounth}/01`).isoWeekday() - 1
         : null;
-    }
+    },
+    formation(){return this.$store.getters.formation},
   }
 };
 </script>

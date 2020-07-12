@@ -26,6 +26,20 @@ export default new Vuex.Store({
       }
       return arr;
     },
+    formation: [
+      'Установление',
+      'Устранение',
+      'Наполнение',
+      'Баланс',
+      'Стабильность',
+      'Удержание',
+      'Разрушение',
+      'Опасность',
+      'Успех',
+      'Получение',
+      'Открытие',
+      'Закрытие'
+    ]
   },
   mutations: {
     date(state, val) {
@@ -37,6 +51,7 @@ export default new Vuex.Store({
     mounthArray(state){
       return state.mounthArray
     },
-    yearsArray(state){return state.yearsArray()}
+    yearsArray(state){return state.yearsArray()},
+    formation(state){return state.formation}
   },
 });
