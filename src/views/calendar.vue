@@ -29,6 +29,7 @@
       <div class="body">
         <div class="item none" v-for="i in weekDay" :key="`${i}_weekDay`"></div>
         <div class="item" v-for="i in generateCalendar()" :key="`${i.dayNum}_day`">
+          <span class="time" v-if="i.glif.day.timeOn">{{i.glif.day.timeMounthBegin}}</span>
           <span class="dayNum">{{ i.dayNum }}</span>
           <div class="glif">
             <div class="day">
@@ -128,7 +129,9 @@ export default {
         const beginMounth = Number(this.mounthBegin[year][mounthDate].begin_date.match(/(\d+)\.\d+/)[1])
         return i<beginMounth ? Number((February ? this.mounthBegin[year-1][12] : this.mounthBegin[year][mounthDate - 1]).mounth_correction) : Number(this.mounthBegin[year][mounthDate].mounth_correction)
       }
-      return this.bacziData.filter(item=>Number(item.id)===(this.date.mounth === 1 ? getMountCorrection(this.date.year,12,false,1) : this.date.mounth === 2 ? getMountCorrection(this.date.year,this.date.mounth-1,true) : getMountCorrection(this.date.year,this.date.mounth - 1)))[0].data
+      
+      const MounthBegin = this.date.mounth ===1 ? this.mounthBegin[this.date.year-1][12].begin_date : this.mounthBegin[this.date.year][this.date.mounth-1].begin_date
+      return {...this.bacziData.filter(item=>Number(item.id)===(this.date.mounth === 1 ? getMountCorrection(this.date.year,12,false,1) : this.date.mounth === 2 ? getMountCorrection(this.date.year,this.date.mounth-1,true) : getMountCorrection(this.date.year,this.date.mounth - 1)))[0].data, MounthBegin}
     },
     getBacziDays(){
       const getCorrectionNumber = num =>
@@ -217,10 +220,13 @@ export default {
     generateCalendar(){
       const calendar = []
       for(let i=1; i < this.dayInMounth; i++){
-        const day = {...this.getBacziDays()[i]}
         const mounth = {...this.getBacziMount(i)}
+        const MounthBegin = mounth.MounthBegin
+        const timeMounthBegin = MounthBegin.match(/\d+:\d+/)[0]
+        const dateMounthBegin = Number(MounthBegin.match(/(\d+)\.\d+/)[1])
+        const timeOn = i === dateMounthBegin
+        const day = {...this.getBacziDays()[i],timeOn,timeMounthBegin}
         const year = {...this.getBacziYear(i)}
-        // console.log('day',day,'mounth',mounth,'year',year)
         const naIn_day = this.naIn(day)
         const naIn_mounth = this.naIn(mounth)
         const naIn_year = this.naIn(year)
@@ -323,13 +329,35 @@ export default {
         position: relative
         height: auto
         display: grid
-        grid-template-columns: repeat(auto-fit, 1fr)
-        grid-template-areas: 'daynum' 'glif'
+        grid-template-areas: 'glif' 'naIn'
         border: 1px solid $accent
+        padding: 40px 0 20px 0
+        .time
+          height: 30px
+          position: absolute
+          top: 0
+          right: 0
+          background-color: red
+          color: white
+          border-radius: 0 0 0 5px 
+          padding: 5px 10px
+          font-size: 1em
         .dayNum
-          position: relative
-          margin: 30px
+          height: 30px
+          position: absolute
+          margin: 5px
           grid-area: daynum
+          border-top: 1px solid $accent
+          border-right: 1px solid $accent
+          border-bottom: 1px solid $accent
+          border-radius: 0 0 5px 0
+          width: 30px
+          top: -6px
+          left: -5px
+          font-size: 1em
+          display: flex
+          justify-content: center
+          align-items: center
         .glif
           grid-area: glif
           display: grid
@@ -343,6 +371,7 @@ export default {
             grid-area: year
         .naIn
           display: grid
+          grid-area: naIn
           grid-template-columns: repeat(auto-fit, 1fr)
           grid-template-areas: 'day mounth year'
           border-top: 1px dashed $accent

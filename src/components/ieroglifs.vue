@@ -1,6 +1,5 @@
 <template>
   <div class="ieroglifs">
-
     <span class="numbers" v-if="!ieroglifOnly">{{ieroglif.number}}</span>
     <span class="sky" :data-title="ieroglif.sky_title" :class="ieroglif.sky_color">{{ieroglif.sky}}</span>
     <span
@@ -50,6 +49,7 @@ export default {
       visibility: hidden
       opacity: 0
       z-index: 99999
+      border-radius: 5px 
     &:hover
       &::after
         visibility: visible
