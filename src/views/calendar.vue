@@ -6,12 +6,19 @@
       </div>
       <div class="info">
         <h1>Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.</h1>
-        <dates @updateChanges="update()" />
+        <dates v-model="date" />
       </div>
     </div>
 
     <div class="wrapper">
-      <aside></aside>
+      <aside>
+        <div class="year white_bg sideMargin">
+          <ieroglifs :block="{...getBacziYear(15)}" :ieroglifOnly='true' />
+        </div>
+        <div class="mounthCaption">
+          <div class="caption">{{mounthCaption()}}</div>
+        </div>
+      </aside>
       <header>
         <span v-for="day in Array.from(daysTitle)" :key="day.index">
           {{
@@ -20,9 +27,31 @@
         </span>
       </header>
       <div class="body">
-        <div class="item none" v-for="i in weekDay" :key="i"></div>
-        <div class="item" v-for="i in dayInMounth" :key="i + dayInMounth">
-          <ieroglifs :block="{data: {...getBasi()[i]}, index: i}" />
+        <div class="item none" v-for="i in weekDay" :key="`${i}_weekDay`"></div>
+        <div class="item" v-for="i in generateCalendar()" :key="`${i.dayNum}_day`">
+          <span class="dayNum">{{ i.dayNum }}</span>
+          <div class="glif">
+            <div class="day">
+            <ieroglifs :block="i.glif.day" />
+            </div>
+            <div class="mounth">
+              <ieroglifs :block="i.glif.mounth" />
+            </div>
+            <div class="year">
+              <ieroglifs :block="i.glif.year" />
+            </div>
+          </div>
+          <div class="naIn">
+            <div class="day">
+              <span :class="i.naIn.day.color">{{i.naIn.day.caption}}</span>
+            </div>
+            <div class="mounth">
+              <span :class="i.naIn.mounth.color">{{i.naIn.mounth.caption}}</span>
+            </div>
+            <div class="year">
+              <span :class="i.naIn.year.color">{{i.naIn.year.caption}}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -36,11 +65,18 @@ import bacziData from "../JS/bacziData";
 import ieroglifs from "../components/ieroglifs";
 import mounthBegin from "../JS/mounthbegin";
 
+const mounth = Number(moment().format("MM"));
+const year = Number(moment().format("YYYY"));
+
 export default {
   name: "calendar",
   components: { dates, ieroglifs },
   data: () => ({
     miss: null,
+    date: {
+      mounth,
+      year
+    },
     daysTitle: [
       { nameEng: "Mon", nameRu: "ПН", index: 1 },
       { nameEng: "Tue", nameRu: "ВТ", index: 2 },
@@ -54,27 +90,6 @@ export default {
     mounthBegin
   }),
   methods: {
-    getBasi() {
-      const firstDayMouth = this.findDayFirstDayInMounth();
-      const getCorrectionNumber = num =>
-        num > 60 ? num - 60 : num < 0 ? 60 + num : num;
-      const getBacziInRange = (first, second) =>
-        this.bacziData.filter(item => item.id >= first && item.id <= second);
-
-      const getBacziArr = (firstDay, countOfDays) => {
-        if (60 - countOfDays > firstDay) {
-          return getBacziInRange(firstDay, firstDay + countOfDays);
-        } else {
-          const secondMax = getCorrectionNumber(
-            firstDayMouth + this.dayInMounth
-          );
-          const firstArr = getBacziInRange(firstDay, 60);
-          const lastArr = getBacziInRange(0, secondMax);
-          return [...firstArr, ...lastArr];
-        }
-      };
-      return getBacziArr(firstDayMouth, this.dayInMounth);
-    },
     findDayFirstDayInMounth() {
       const dayCalibration = 17;
       const oneDayMsec = 24 * 3600;
@@ -107,143 +122,136 @@ export default {
       }
       return days;
     },
-    update() {
-      if (!this.isEmptyObject(this.date)) {
-        this.getBasi();
-        this.findMounthAndYear();
-        // this.findDayFirstDayInMounth();
+    getBacziMount(i){
+      const getMountCorrection = (yearDate,mounthDate,February=false, yearCorection = null) => {
+        const year = yearCorection !== null ? yearDate - yearCorection : yearDate
+        const beginMounth = Number(this.mounthBegin[year][mounthDate].begin_date.match(/(\d+)\.\d+/)[1])
+        return i<beginMounth ? Number((February ? this.mounthBegin[year-1][12] : this.mounthBegin[year][mounthDate - 1]).mounth_correction) : Number(this.mounthBegin[year][mounthDate].mounth_correction)
+      }
+      return this.bacziData.filter(item=>Number(item.id)===(this.date.mounth === 1 ? getMountCorrection(this.date.year,12,false,1) : this.date.mounth === 2 ? getMountCorrection(this.date.year,this.date.mounth-1,true) : getMountCorrection(this.date.year,this.date.mounth - 1)))[0].data
+    },
+    getBacziDays(){
+      const getCorrectionNumber = num =>
+        num > 60 ? num - 60 : num < 0 ? 60 + num : num;
+      const getBacziInRange = (first, second) =>
+        this.bacziData.filter(item => item.id >= first && item.id <= second);
+      const getBacziArr = (firstDay, countOfDays) => 60 - countOfDays > firstDay ? getBacziInRange(firstDay, firstDay + countOfDays) : [...getBacziInRange(firstDay, 60), ...getBacziInRange(0, getCorrectionNumber(this.findDayFirstDayInMounth() + this.dayInMounth))]
+      return getBacziArr(this.findDayFirstDayInMounth(), this.dayInMounth).map(item=> item.data)
+    },
+    getBacziYear(i) {
+      const yearBegin = this.mounthBegin[this.date.year][1].begin_date.match(/(\d+)\.(\d+)/)
+      const correction = this.date.mounth === Number(yearBegin[2]) ? i < Number(yearBegin[1]) ? Number(this.mounthBegin[this.date.year-1].correction) : Number(this.mounthBegin[this.date.year].correction) : this.date.mounth < Number(yearBegin[2]) ? Number(this.mounthBegin[this.date.year-1].correction) : Number(this.mounthBegin[this.date.year].correction)
+      return this.bacziData.filter(item=>Number(item.id)===correction)[0].data
+    },
+    mounthCaption(){
+      return this.$store.getters.mounthArray.filter(item=>Number(item.id)===this.date.mounth)[0].name
+    },
+    naIn(stolp){
+      if(stolp.sky ==='戊' && stolp.ground === '子' ||
+      stolp.sky ==='己' && stolp.ground === '丑' ||
+      stolp.sky ==='丙' && stolp.ground === '寅' ||
+      stolp.sky ==='丁' && stolp.ground === '卯' ||
+      stolp.sky ==='甲' && stolp.ground === '辰' ||
+      stolp.sky ==='乙' && stolp.ground === '巳' ||
+      stolp.sky ==='戊' && stolp.ground === '午' ||
+      stolp.sky ==='己' && stolp.ground === '未' ||
+      stolp.sky ==='丙' && stolp.ground === '申' ||
+      stolp.sky ==='丁' && stolp.ground === '酉' ||
+      stolp.sky ==='甲' && stolp.ground === '戌' ||
+      stolp.sky ==='乙' && stolp.ground === '亥' ){
+        return {caption: '火', color: 'red'}
+      }else if(stolp.sky ==='庚' && stolp.ground === '子' ||
+      stolp.sky ==='辛' && stolp.ground === '丑' ||
+      stolp.sky ==='庚' && stolp.ground === '子' ||
+      stolp.sky ==='辛' && stolp.ground === '丑' ||
+      stolp.sky ==='丙' && stolp.ground === '辰' ||
+      stolp.sky ==='丁' && stolp.ground === '巳' ||
+      stolp.sky ==='庚' && stolp.ground === '午' ||
+      stolp.sky ==='辛' && stolp.ground === '未' ||
+      stolp.sky ==='戊' && stolp.ground === '申' ||
+      stolp.sky ==='己' && stolp.ground === '酉' ||
+      stolp.sky ==='丙' && stolp.ground === '戌' ||
+      stolp.sky ==='丁' && stolp.ground === '亥' ){
+        return {caption: '土', color: 'brown'}
+      }else if(stolp.sky ==='丙' && stolp.ground === '子' ||
+      stolp.sky ==='丁' && stolp.ground === '丑' ||
+      stolp.sky ==='壬' && stolp.ground === '寅' ||
+      stolp.sky ==='癸' && stolp.ground === '卯' ||
+      stolp.sky ==='庚' && stolp.ground === '辰' ||
+      stolp.sky ==='辛' && stolp.ground === '巳' ||
+      stolp.sky ==='甲' && stolp.ground === '午' ||
+      stolp.sky ==='乙' && stolp.ground === '未' ||
+      stolp.sky ==='壬' && stolp.ground === '申' ||
+      stolp.sky ==='癸' && stolp.ground === '酉' ||
+      stolp.sky ==='庚' && stolp.ground === '戌' ||
+      stolp.sky ==='辛' && stolp.ground === '亥' ){
+        return {caption: '金', color: 'gray'}
+      }else if(stolp.sky ==='丙' && stolp.ground === '子' ||
+      stolp.sky ==='丁' && stolp.ground === '丑' ||
+      stolp.sky ==='甲' && stolp.ground === '寅' ||
+      stolp.sky ==='乙' && stolp.ground === '卯' ||
+      stolp.sky ==='壬' && stolp.ground === '辰' ||
+      stolp.sky ==='癸' && stolp.ground === '巳' ||
+      stolp.sky ==='丙' && stolp.ground === '午' ||
+      stolp.sky ==='丁' && stolp.ground === '未' ||
+      stolp.sky ==='甲' && stolp.ground === '申' ||
+      stolp.sky ==='乙' && stolp.ground === '酉' ||
+      stolp.sky ==='壬' && stolp.ground === '戌' ||
+      stolp.sky ==='癸' && stolp.ground === '亥' ){
+        return {caption: '水', color: 'blue'}
+      }else if(stolp.sky ==='壬' && stolp.ground === '子' ||
+      stolp.sky ==='癸' && stolp.ground === '丑' ||
+      stolp.sky ==='庚' && stolp.ground === '寅' ||
+      stolp.sky ==='辛' && stolp.ground === '卯' ||
+      stolp.sky ==='戊' && stolp.ground === '辰' ||
+      stolp.sky ==='己' && stolp.ground === '巳' ||
+      stolp.sky ==='壬' && stolp.ground === '午' ||
+      stolp.sky ==='癸' && stolp.ground === '未' ||
+      stolp.sky ==='庚' && stolp.ground === '申' ||
+      stolp.sky ==='辛' && stolp.ground === '酉' ||
+      stolp.sky ==='戊' && stolp.ground === '戌' ||
+      stolp.sky ==='己' && stolp.ground === '亥' ){
+        return {caption: '木', color: 'green'}
       }
     },
-    findMounthAndYear(timestamp, dateTime) {
-      console.log(timestamp, dateTime);
-      const year = this.date.year;
-      const yearBegin = this.mounthBegin[this.date.year][this.date.mounth - 1];
-      console.log("yearBegin", yearBegin, year);
-      // $yearCorrection = $yearBegin['correction'];
-      // $yearBegin = $yearBegin['1'];
-      // $yearBegin = $yearBegin['begin_date'];
-      // $yearBegin = explode(' ', $yearBegin);
-      // $yearBegin = $yearBegin[0] . '.' . $year . ' ' . $yearBegin[1];
-      // $yearBegin = strtotime($yearBegin);
-      // //	 echo '$yearBegin='.$yearBegin;
-      // $yearEnd = mounthData();
-      // $yearEnd = $yearEnd[(int)($year + 1)];
-      // $yearEnd = $yearEnd['1'];
-      // $yearEnd = $yearEnd['begin_date'];
-      // $yearEnd = explode(' ', $yearEnd);
-      // $yearEnd = $yearEnd[0] . '.' . (int)($year + 1) . ' ' . $yearEnd[1];
-      // $yearEnd = strtotime($yearEnd);
-      // $yearEnd = (int)($yearEnd - 1);
-      // //	 echo '$yearEnd='.$yearEnd;
-      // if ($timestamp < $yearBegin) {
-      // $lastYear =	mounthData();
-      // $ly = (int)($year - 1);
-      // $lastYear = $lastYear[$ly];
-      // // echo '$ly='.$ly;
-      // $january = $lastYear['11'];
-      // $january = $january['begin_date'];
-      // // echo '$january='.$january;
-      // $january = explode(' ', $january);
-      // // showArray($january);
-      // $january = '' . $january[0] . '.' . $ly . ' ' . $january[1];
-      // // echo '$january[0].$ly.$january[1];='.$january;
-      // $january = strtotime($january);
-      // $february = $lastYear['12'];
-      // $february = $february['begin_date'];
-      // // echo '$february='.$february;
-      // $february = explode(' ', $february);
-      // //		 showArray($february);
-      // $february = '' . $february[0] . '.' . $year . ' ' . $february[1];
-      // // echo ' $february[0].$ly.$february[1];='.$february;
-      // $february = strtotime($february);
-      // if ($timestamp <= $february) {
-      // $mounthCorrection = $lastYear['11']['mounth_correction'];
-      // $result[0] = correction($mounthCorrection);
-      // $result[1] = correction($lastYear['correction']);
-      // //			 showArray($result);
-      // //			 echo '<br>yanuary';
-      // } else if (($timestamp > $february) && ($timestamp <= $yearBegin)) {
-      // $mounthCorrection = $lastYear['12']['mounth_correction'];
-      // $result[0] = correction($mounthCorrection);
-      // $result[1] = correction($lastYear['correction']);
-      // //			 showArray($mounth);
-      // // echo '<br>february';
-      // }
-      // $result['china_real_year'] = $ly;
-      // } else if (($timestamp > $yearBegin) && ($timestamp < $yearEnd)) {
-      // $mounth = mounthData();
-      // $mounth = $mounth[$year];
-      // //		 showArray($mounth);
-      // $dateTime = explode(' ', $dateTime);
-      // $date = explode('.', $dateTime[0]);
-      // //		echo $date[1];
-      // $afterMounth = $mounth[(int)($date[1])];
-      // //		echo '<br>$afterMounth='.showArray($afterMounth);
-      // $mounth = $mounth[(int)($date[1] - 1)];
-      // //		 showArray($afterMounth);showArray($mounth);
-      // $mounthCorrection = $mounth['mounth_correction'];
-      // $mounth = $mounth['begin_date'];
-      // //		showArray($mounth);
-      // $mounth = explode(' ', $mounth);
-      // $mounth = '' . $mounth[0] . '.' . $year . ' ' . $mounth[1];
-      // //		 echo '<br>$mounth='.$mounth;
-      // $mounth = strtotime($mounth);
-      // //		 echo '<br>$mounth='.$mounth;
-      // $afterMounthCorrection = $afterMounth['mounth_correction'];
-      // $afterMounth = $afterMounth['begin_date'];
-      // $afterMounth = explode(' ', $afterMounth);
-      // $afterMounth = '' . $afterMounth[0] . '.' . $year . ' ' . $afterMounth[1];
-      // // echo '<br>$afterMounth='.$afterMounth;
-      // $afterMounth = strtotime($afterMounth);
-      // // echo '<br>$afterMounth='.$afterMounth;
-      // if (($timestamp > $mounth) && ($timestamp < $afterMounth)) {
-      // $result[0] = correction($mounthCorrection);
-      // $result[1] = correction($yearCorrection);
-      // //			 print_r($result);
-      // } else if ($timestamp > $afterMounth) {
-      // $result[0] = correctionPlus($afterMounthCorrection - 2);
-      // $result[1] = correction($yearCorrection);
-      // //			 print_r($result);
-      // }
-      // else if ($timestamp <= $mounth) {
-      // $result[0] = correction($mounthCorrection - 1);
-      // $result[1] = correction($yearCorrection);
-      // //					 print_r($result);
-      // //			 echo '<br>mounth2';
-      // }
-      // $result['china_real_year'] = $year;
-      // }
-      // // showArray( $result);
-      // return $result;
+    generateCalendar(){
+      const calendar = []
+      for(let i=1; i < this.dayInMounth; i++){
+        const day = {...this.getBacziDays()[i]}
+        const mounth = {...this.getBacziMount(i)}
+        const year = {...this.getBacziYear(i)}
+        // console.log('day',day,'mounth',mounth,'year',year)
+        const naIn_day = this.naIn(day)
+        const naIn_mounth = this.naIn(mounth)
+        const naIn_year = this.naIn(year)
+        calendar.push({
+          dayNum: i,
+          glif: {
+            day,
+            mounth,
+            year
+          },
+          naIn: {
+            day: {...naIn_day},
+            mounth: {...naIn_mounth},
+            year: {...naIn_year}
+          }
+        })
+      }
+      console.log(calendar)
+      return calendar
     }
+
   },
   computed: {
     dayInMounth() {
-      if (!this.isEmptyObject(this.date)) {
-        return moment(
-          `${this.date.year}/${this.date.mounth}`,
-          "YYYY/MM"
-        ).daysInMonth();
-      } else {
-        return null;
-      }
+      return !this.isEmptyObject(this.date) ? moment(`${this.date.year}/${this.date.mounth}`,"YYYY/MM").daysInMonth() : null
     },
     weekDay() {
       return this.date
         ? moment(`${this.date.year}/${this.date.mounth}/01`).isoWeekday() - 1
         : null;
-    },
-    date: {
-      get() {
-        return this.$store.getters.date;
-      },
-      set(val) {
-        this.commit("date", val);
-      }
     }
-  },
-  mounted() {
-    this.update();
   }
 };
 </script>
@@ -276,6 +284,24 @@ export default {
       height: auto
       background-color: rgba($accent,1)
       grid-area: asids
+      height: 100%
+      display: grid
+      grid-template-rows: 130px 1fr
+      align-items: center
+      .white_bg
+        background-color: white
+      .sideMargin
+        margin: 0 auto
+        padding: 20px
+        width: 90px
+        position: relative
+        top: -30px
+        border: 3px solid $accent
+      .mounthCaption
+        .caption
+          transform: rotateZ(-90deg)
+          font-size: 5em
+          color: white
     header
       grid-area: heads
       height: 80px
@@ -295,7 +321,43 @@ export default {
       .item
         height: 100%
         position: relative
-        height: 250px
+        height: auto
+        display: grid
+        grid-template-columns: repeat(auto-fit, 1fr)
+        grid-template-areas: 'daynum' 'glif'
+        border: 1px solid $accent
+        .dayNum
+          position: relative
+          margin: 30px
+          grid-area: daynum
+        .glif
+          grid-area: glif
+          display: grid
+          grid-template-columns: repeat(auto-fit, 1fr)
+          grid-template-areas: 'day mounth year'
+          .day
+            grid-area: day
+          .mounth
+            grid-area: mounth
+          .year
+            grid-area: year
+        .naIn
+          display: grid
+          grid-template-columns: repeat(auto-fit, 1fr)
+          grid-template-areas: 'day mounth year'
+          border-top: 1px dashed $accent
+          .day
+            grid-area: day
+            text-align: center
+            font-size: 2em
+          .mounth
+            grid-area: mounth
+            text-align: center
+            font-size: 2em
+          .year
+            grid-area: year
+            text-align: center
+            font-size: 2em
         &:nth-child(7n)
           background-color: rgba($accent,.3)
         &:nth-child(6),&:nth-child(13),&:nth-child(20),&:nth-child(27),&:nth-child(34)
@@ -304,4 +366,5 @@ export default {
           background-color: rgba($accent,.1)
         &.none
           background-color: rgba($item_none,.3)
+          border: 1px solid transparent
 </style>
