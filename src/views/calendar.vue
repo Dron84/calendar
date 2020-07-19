@@ -36,7 +36,7 @@
 import moment from "moment";
 import dates from "../components/dates";
 import bacziData from "../JS/bacziData";
-
+import ieroglifs from "../components/ieroglifs";
 import calendarDay from "../components/calendarDay";
 import mounthBegin from "../JS/mounthbegin";
 
@@ -45,7 +45,7 @@ const year = Number(moment().format("YYYY"));
 
 export default {
   name: "calendar",
-  components: { dates, calendarDay },
+  components: { dates, calendarDay, ieroglifs },
   data: () => ({
     miss: null,
     date: {
@@ -264,7 +264,9 @@ export default {
       );
       const pushCalendar = (index, formationIndex) =>
         calendar[index] !== undefined &&
-        calendar[index].caption.push(formation[formationIndex]);
+        calendar[index].caption.push(
+          `${formationIndex}. ${formation[formationIndex]}`
+        );
 
       id.map((day) => {
         calendar.map((item, index) => {

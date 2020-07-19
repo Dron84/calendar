@@ -30,9 +30,9 @@
         </div>
       </div>
       <div class="caption">
-        <ol>
+        <ul>
           <li v-for="(cap, index) of i.caption" :key="index">{{ cap }}</li>
-        </ol>
+        </ul>
       </div>
     </div>
   </div>
@@ -133,6 +133,7 @@ export default {
     .caption
       grid-area: caption
       border-top: 1px dashed $accent
-      ol
+      ul
+        list-style: none
         padding: 0 20px
 </style>
