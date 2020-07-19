@@ -5,7 +5,9 @@
         <img src="https://nadezhda-kalinina.com/img/icon/logo.svg" />
       </div>
       <div class="info">
-        <h1>Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.</h1>
+        <h1>
+          Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.
+        </h1>
         <dates v-model="date" />
       </div>
     </div>
@@ -13,48 +15,19 @@
     <div class="wrapper">
       <aside>
         <div class="year white_bg sideMargin">
-          <ieroglifs :block="{...getBacziYear(15)}" :ieroglifOnly='true' />
+          <ieroglifs :block="{ ...getBacziYear(15) }" :ieroglifOnly="true" />
         </div>
         <div class="mounthCaption">
-          <div class="caption">{{mounthCaption()}}</div>
+          <div class="caption">{{ mounthCaption() }}</div>
         </div>
       </aside>
       <header>
         <span v-for="day in Array.from(daysTitle)" :key="day.index">
-          {{
-          day.nameRu
-          }}
+          {{ day.nameRu }}
         </span>
       </header>
-      <div class="body">
-        <div class="item none" v-for="i in weekDay" :key="`${i}_weekDay`"></div>
-        <div class="item" v-for="i in generateCalendar()" :key="`${i.dayNum}_day`">
-          <span class="time" v-if="i.glif.day.timeOn">{{i.glif.day.timeMounthBegin}}</span>
-          <span class="dayNum">{{ i.dayNum }}</span>
-          <div class="glif">
-            <div class="day">
-            <ieroglifs :block="i.glif.day" />
-            </div>
-            <div class="mounth">
-              <ieroglifs :block="i.glif.mounth" />
-            </div>
-            <div class="year">
-              <ieroglifs :block="i.glif.year" />
-            </div>
-          </div>
-          <div class="naIn">
-            <div class="day">
-              <span :class="i.naIn.day.color">{{i.naIn.day.caption}}</span>
-            </div>
-            <div class="mounth">
-              <span :class="i.naIn.mounth.color">{{i.naIn.mounth.caption}}</span>
-            </div>
-            <div class="year">
-              <span :class="i.naIn.year.color">{{i.naIn.year.caption}}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <calendarDay :calendar="generateCalendar()" :weekDay="weekDay" />
     </div>
   </div>
 </template>
@@ -63,7 +36,8 @@
 import moment from "moment";
 import dates from "../components/dates";
 import bacziData from "../JS/bacziData";
-import ieroglifs from "../components/ieroglifs";
+
+import calendarDay from "../components/calendarDay";
 import mounthBegin from "../JS/mounthbegin";
 
 const mounth = Number(moment().format("MM"));
@@ -71,12 +45,12 @@ const year = Number(moment().format("YYYY"));
 
 export default {
   name: "calendar",
-  components: { dates, ieroglifs },
+  components: { dates, calendarDay },
   data: () => ({
     miss: null,
     date: {
       mounth,
-      year
+      year,
     },
     daysTitle: [
       { nameEng: "Mon", nameRu: "ПН", index: 1 },
@@ -85,10 +59,10 @@ export default {
       { nameEng: "Thu", nameRu: "ЧТ", index: 4 },
       { nameEng: "Fri", nameRu: "ПТ", index: 5 },
       { nameEng: "Sat", nameRu: "СБ", index: 6 },
-      { nameEng: "Sun", nameRu: "ВС", index: 7 }
+      { nameEng: "Sun", nameRu: "ВС", index: 7 },
     ],
     bacziData,
-    mounthBegin
+    mounthBegin,
   }),
   methods: {
     findDayFirstDayInMounth() {
@@ -123,142 +97,240 @@ export default {
       }
       return days;
     },
-    getBacziMount(i){
-      const getMountCorrection = (yearDate,mounthDate,February=false, yearCorection = null) => {
-        const year = yearCorection !== null ? yearDate - yearCorection : yearDate
-        const beginMounth = Number(this.mounthBegin[year][mounthDate].begin_date.match(/(\d+)\.\d+/)[1])
-        return i<beginMounth ? Number((February ? this.mounthBegin[year-1][12] : this.mounthBegin[year][mounthDate - 1]).mounth_correction) : Number(this.mounthBegin[year][mounthDate].mounth_correction)
-      }
-      
-      const MounthBegin = this.date.mounth ===1 ? this.mounthBegin[this.date.year-1][12].begin_date : this.mounthBegin[this.date.year][this.date.mounth-1].begin_date
-      return {...this.bacziData.filter(item=>Number(item.id)===(this.date.mounth === 1 ? getMountCorrection(this.date.year,12,false,1) : this.date.mounth === 2 ? getMountCorrection(this.date.year,this.date.mounth-1,true) : getMountCorrection(this.date.year,this.date.mounth - 1)))[0].data, MounthBegin}
+    getBacziMount(i) {
+      const getMountCorrection = (
+        yearDate,
+        mounthDate,
+        February = false,
+        yearCorection = null
+      ) => {
+        const year =
+          yearCorection !== null ? yearDate - yearCorection : yearDate;
+        const beginMounth = Number(
+          this.mounthBegin[year][mounthDate].begin_date.match(/(\d+)\.\d+/)[1]
+        );
+        return i < beginMounth
+          ? Number(
+              (February
+                ? this.mounthBegin[year - 1][12]
+                : this.mounthBegin[year][mounthDate - 1]
+              ).mounth_correction
+            )
+          : Number(this.mounthBegin[year][mounthDate].mounth_correction);
+      };
+
+      const MounthBegin =
+        this.date.mounth === 1
+          ? this.mounthBegin[this.date.year - 1][12].begin_date
+          : this.mounthBegin[this.date.year][this.date.mounth - 1].begin_date;
+      return {
+        ...this.bacziData.filter(
+          (item) =>
+            Number(item.id) ===
+            (this.date.mounth === 1
+              ? getMountCorrection(this.date.year, 12, false, 1)
+              : this.date.mounth === 2
+              ? getMountCorrection(this.date.year, this.date.mounth - 1, true)
+              : getMountCorrection(this.date.year, this.date.mounth - 1))
+        )[0].data,
+        MounthBegin,
+      };
     },
-    getBacziDays(){
-      const getCorrectionNumber = num =>
+    getBacziDays() {
+      const getCorrectionNumber = (num) =>
         num > 60 ? num - 60 : num < 0 ? 60 + num : num;
       const getBacziInRange = (first, second) =>
-        this.bacziData.filter(item => item.id >= first && item.id <= second);
-      const getBacziArr = (firstDay, countOfDays) => 60 - countOfDays > firstDay ? getBacziInRange(firstDay, firstDay + countOfDays) : [...getBacziInRange(firstDay, 60), ...getBacziInRange(0, getCorrectionNumber(this.findDayFirstDayInMounth() + this.dayInMounth))]
-      return getBacziArr(this.findDayFirstDayInMounth(), this.dayInMounth).map(item=> item.data)
+        this.bacziData.filter((item) => item.id >= first && item.id <= second);
+      const getBacziArr = (firstDay, countOfDays) =>
+        60 - countOfDays > firstDay
+          ? getBacziInRange(firstDay, firstDay + countOfDays)
+          : [
+              ...getBacziInRange(firstDay, 60),
+              ...getBacziInRange(
+                0,
+                getCorrectionNumber(
+                  this.findDayFirstDayInMounth() + this.dayInMounth
+                )
+              ),
+            ];
+      return getBacziArr(this.findDayFirstDayInMounth(), this.dayInMounth).map(
+        (item) => item.data
+      );
     },
     getBacziYear(i) {
-      const yearBegin = this.mounthBegin[this.date.year][1].begin_date.match(/(\d+)\.(\d+)/)
-      const correction = this.date.mounth === Number(yearBegin[2]) ? i < Number(yearBegin[1]) ? Number(this.mounthBegin[this.date.year-1].correction) : Number(this.mounthBegin[this.date.year].correction) : this.date.mounth < Number(yearBegin[2]) ? Number(this.mounthBegin[this.date.year-1].correction) : Number(this.mounthBegin[this.date.year].correction)
-      return this.bacziData.filter(item=>Number(item.id)===correction)[0].data
+      const yearBegin = this.mounthBegin[this.date.year][1].begin_date.match(
+        /(\d+)\.(\d+)/
+      );
+      const correction =
+        this.date.mounth === Number(yearBegin[2])
+          ? i < Number(yearBegin[1])
+            ? Number(this.mounthBegin[this.date.year - 1].correction)
+            : Number(this.mounthBegin[this.date.year].correction)
+          : this.date.mounth < Number(yearBegin[2])
+          ? Number(this.mounthBegin[this.date.year - 1].correction)
+          : Number(this.mounthBegin[this.date.year].correction);
+      return this.bacziData.filter((item) => Number(item.id) === correction)[0]
+        .data;
     },
-    mounthCaption(){
-      return this.$store.getters.mounthArray.filter(item=>Number(item.id)===this.date.mounth)[0].name
+    mounthCaption() {
+      return this.$store.getters.mounthArray.filter(
+        (item) => Number(item.id) === this.date.mounth
+      )[0].name;
     },
-    naIn(stolp){
-      if(stolp.sky ==='戊' && stolp.ground === '子' ||
-      stolp.sky ==='己' && stolp.ground === '丑' ||
-      stolp.sky ==='丙' && stolp.ground === '寅' ||
-      stolp.sky ==='丁' && stolp.ground === '卯' ||
-      stolp.sky ==='甲' && stolp.ground === '辰' ||
-      stolp.sky ==='乙' && stolp.ground === '巳' ||
-      stolp.sky ==='戊' && stolp.ground === '午' ||
-      stolp.sky ==='己' && stolp.ground === '未' ||
-      stolp.sky ==='丙' && stolp.ground === '申' ||
-      stolp.sky ==='丁' && stolp.ground === '酉' ||
-      stolp.sky ==='甲' && stolp.ground === '戌' ||
-      stolp.sky ==='乙' && stolp.ground === '亥' ){
-        return {caption: '火', color: 'red'}
-      }else if(stolp.sky ==='庚' && stolp.ground === '子' ||
-      stolp.sky ==='辛' && stolp.ground === '丑' ||
-      stolp.sky ==='戊' && stolp.ground === '寅' ||
-      stolp.sky ==='己' && stolp.ground === '卯' ||
-      stolp.sky ==='丙' && stolp.ground === '辰' ||
-      stolp.sky ==='丁' && stolp.ground === '巳' ||
-      stolp.sky ==='庚' && stolp.ground === '午' ||
-      stolp.sky ==='辛' && stolp.ground === '未' ||
-      stolp.sky ==='戊' && stolp.ground === '申' ||
-      stolp.sky ==='己' && stolp.ground === '酉' ||
-      stolp.sky ==='丙' && stolp.ground === '戌' ||
-      stolp.sky ==='丁' && stolp.ground === '亥' ){
-        return {caption: '土', color: 'brown'}
-      }else if(stolp.sky ==='甲' && stolp.ground === '子' ||
-      stolp.sky ==='乙' && stolp.ground === '丑' ||
-      stolp.sky ==='壬' && stolp.ground === '寅' ||
-      stolp.sky ==='癸' && stolp.ground === '卯' ||
-      stolp.sky ==='庚' && stolp.ground === '辰' ||
-      stolp.sky ==='辛' && stolp.ground === '巳' ||
-      stolp.sky ==='甲' && stolp.ground === '午' ||
-      stolp.sky ==='乙' && stolp.ground === '未' ||
-      stolp.sky ==='壬' && stolp.ground === '申' ||
-      stolp.sky ==='癸' && stolp.ground === '酉' ||
-      stolp.sky ==='庚' && stolp.ground === '戌' ||
-      stolp.sky ==='辛' && stolp.ground === '亥' ){
-        return {caption: '金', color: 'gray'}
-      }else if(stolp.sky ==='丙' && stolp.ground === '子' ||
-      stolp.sky ==='丁' && stolp.ground === '丑' ||
-      stolp.sky ==='甲' && stolp.ground === '寅' ||
-      stolp.sky ==='乙' && stolp.ground === '卯' ||
-      stolp.sky ==='壬' && stolp.ground === '辰' ||
-      stolp.sky ==='癸' && stolp.ground === '巳' ||
-      stolp.sky ==='丙' && stolp.ground === '午' ||
-      stolp.sky ==='丁' && stolp.ground === '未' ||
-      stolp.sky ==='甲' && stolp.ground === '申' ||
-      stolp.sky ==='乙' && stolp.ground === '酉' ||
-      stolp.sky ==='壬' && stolp.ground === '戌' ||
-      stolp.sky ==='癸' && stolp.ground === '亥' ){
-        return {caption: '水', color: 'blue'}
-      }else if(stolp.sky ==='壬' && stolp.ground === '子' ||
-      stolp.sky ==='癸' && stolp.ground === '丑' ||
-      stolp.sky ==='庚' && stolp.ground === '寅' ||
-      stolp.sky ==='辛' && stolp.ground === '卯' ||
-      stolp.sky ==='戊' && stolp.ground === '辰' ||
-      stolp.sky ==='己' && stolp.ground === '巳' ||
-      stolp.sky ==='壬' && stolp.ground === '午' ||
-      stolp.sky ==='癸' && stolp.ground === '未' ||
-      stolp.sky ==='庚' && stolp.ground === '申' ||
-      stolp.sky ==='辛' && stolp.ground === '酉' ||
-      stolp.sky ==='戊' && stolp.ground === '戌' ||
-      stolp.sky ==='己' && stolp.ground === '亥' ){
-        return {caption: '木', color: 'green'}
+    naIn(stolp) {
+      if (
+        (stolp.sky === "戊" && stolp.ground === "子") ||
+        (stolp.sky === "己" && stolp.ground === "丑") ||
+        (stolp.sky === "丙" && stolp.ground === "寅") ||
+        (stolp.sky === "丁" && stolp.ground === "卯") ||
+        (stolp.sky === "甲" && stolp.ground === "辰") ||
+        (stolp.sky === "乙" && stolp.ground === "巳") ||
+        (stolp.sky === "戊" && stolp.ground === "午") ||
+        (stolp.sky === "己" && stolp.ground === "未") ||
+        (stolp.sky === "丙" && stolp.ground === "申") ||
+        (stolp.sky === "丁" && stolp.ground === "酉") ||
+        (stolp.sky === "甲" && stolp.ground === "戌") ||
+        (stolp.sky === "乙" && stolp.ground === "亥")
+      ) {
+        return { caption: "火", color: "red" };
+      } else if (
+        (stolp.sky === "庚" && stolp.ground === "子") ||
+        (stolp.sky === "辛" && stolp.ground === "丑") ||
+        (stolp.sky === "戊" && stolp.ground === "寅") ||
+        (stolp.sky === "己" && stolp.ground === "卯") ||
+        (stolp.sky === "丙" && stolp.ground === "辰") ||
+        (stolp.sky === "丁" && stolp.ground === "巳") ||
+        (stolp.sky === "庚" && stolp.ground === "午") ||
+        (stolp.sky === "辛" && stolp.ground === "未") ||
+        (stolp.sky === "戊" && stolp.ground === "申") ||
+        (stolp.sky === "己" && stolp.ground === "酉") ||
+        (stolp.sky === "丙" && stolp.ground === "戌") ||
+        (stolp.sky === "丁" && stolp.ground === "亥")
+      ) {
+        return { caption: "土", color: "brown" };
+      } else if (
+        (stolp.sky === "甲" && stolp.ground === "子") ||
+        (stolp.sky === "乙" && stolp.ground === "丑") ||
+        (stolp.sky === "壬" && stolp.ground === "寅") ||
+        (stolp.sky === "癸" && stolp.ground === "卯") ||
+        (stolp.sky === "庚" && stolp.ground === "辰") ||
+        (stolp.sky === "辛" && stolp.ground === "巳") ||
+        (stolp.sky === "甲" && stolp.ground === "午") ||
+        (stolp.sky === "乙" && stolp.ground === "未") ||
+        (stolp.sky === "壬" && stolp.ground === "申") ||
+        (stolp.sky === "癸" && stolp.ground === "酉") ||
+        (stolp.sky === "庚" && stolp.ground === "戌") ||
+        (stolp.sky === "辛" && stolp.ground === "亥")
+      ) {
+        return { caption: "金", color: "gray" };
+      } else if (
+        (stolp.sky === "丙" && stolp.ground === "子") ||
+        (stolp.sky === "丁" && stolp.ground === "丑") ||
+        (stolp.sky === "甲" && stolp.ground === "寅") ||
+        (stolp.sky === "乙" && stolp.ground === "卯") ||
+        (stolp.sky === "壬" && stolp.ground === "辰") ||
+        (stolp.sky === "癸" && stolp.ground === "巳") ||
+        (stolp.sky === "丙" && stolp.ground === "午") ||
+        (stolp.sky === "丁" && stolp.ground === "未") ||
+        (stolp.sky === "甲" && stolp.ground === "申") ||
+        (stolp.sky === "乙" && stolp.ground === "酉") ||
+        (stolp.sky === "壬" && stolp.ground === "戌") ||
+        (stolp.sky === "癸" && stolp.ground === "亥")
+      ) {
+        return { caption: "水", color: "blue" };
+      } else if (
+        (stolp.sky === "壬" && stolp.ground === "子") ||
+        (stolp.sky === "癸" && stolp.ground === "丑") ||
+        (stolp.sky === "庚" && stolp.ground === "寅") ||
+        (stolp.sky === "辛" && stolp.ground === "卯") ||
+        (stolp.sky === "戊" && stolp.ground === "辰") ||
+        (stolp.sky === "己" && stolp.ground === "巳") ||
+        (stolp.sky === "壬" && stolp.ground === "午") ||
+        (stolp.sky === "癸" && stolp.ground === "未") ||
+        (stolp.sky === "庚" && stolp.ground === "申") ||
+        (stolp.sky === "辛" && stolp.ground === "酉") ||
+        (stolp.sky === "戊" && stolp.ground === "戌") ||
+        (stolp.sky === "己" && stolp.ground === "亥")
+      ) {
+        return { caption: "木", color: "green" };
       }
     },
-    generateCalendar(){
-      const calendar = []
-      for(let i=1; i < this.dayInMounth; i++){
-        const mounth = {...this.getBacziMount(i)}
-        const MounthBegin = mounth.MounthBegin
-        const timeMounthBegin = MounthBegin.match(/\d+:\d+/)[0]
-        const dateMounthBegin = Number(MounthBegin.match(/(\d+)\.\d+/)[1])
-        const timeOn = i === dateMounthBegin
-        const day = {...this.getBacziDays()[i],timeOn,timeMounthBegin}
-        const year = {...this.getBacziYear(i)}
-        const naIn_day = this.naIn(day)
-        const naIn_mounth = this.naIn(mounth)
-        const naIn_year = this.naIn(year)
+    FormationCaption(calendar) {
+      console.log(`calendar`, calendar);
+      const formation = this.$store.getters.formation;
+      let id = calendar.filter(
+        (item, index) =>
+          item.glif.day.ground === item.glif.mounth.ground && index
+      );
+      const pushCalendar = (index, formationIndex) =>
+        calendar[index] !== undefined &&
+        calendar[index].caption.push(formation[formationIndex]);
+
+      id.map((day) => {
+        calendar.map((item, index) => {
+          if (item.dayNum === day.dayNum) {
+            for (let i = 0; i < 11; i++) {
+              pushCalendar(index + i, i + 1);
+            }
+          }
+        });
+      });
+      console.log(`formation`, formation, id);
+      console.log(`calendar`, calendar);
+      return calendar;
+    },
+    generateCalendar() {
+      const calendar = [];
+      for (let i = 1; i < this.dayInMounth; i++) {
+        const mounth = { ...this.getBacziMount(i) };
+        const MounthBegin = mounth.MounthBegin;
+        const timeMounthBegin = MounthBegin.match(/\d+:\d+/)[0];
+        const dateMounthBegin = Number(MounthBegin.match(/(\d+)\.\d+/)[1]);
+        const timeOn = i === dateMounthBegin;
+        const day = { ...this.getBacziDays()[i], timeOn, timeMounthBegin };
+        const year = { ...this.getBacziYear(i) };
+        const naIn_day = this.naIn(day);
+        const naIn_mounth = this.naIn(mounth);
+        const naIn_year = this.naIn(year);
+        const caption = [];
         calendar.push({
           dayNum: i,
           glif: {
             day,
             mounth,
-            year
+            year,
           },
           naIn: {
-            day: {...naIn_day},
-            mounth: {...naIn_mounth},
-            year: {...naIn_year}
-          }
-        })
+            day: { ...naIn_day },
+            mounth: { ...naIn_mounth },
+            year: { ...naIn_year },
+          },
+          caption,
+        });
       }
-      return calendar
-    }
+      const calendarWithFormation = this.FormationCaption(calendar);
 
+      return calendarWithFormation;
+    },
   },
   computed: {
     dayInMounth() {
-      return !this.isEmptyObject(this.date) ? moment(`${this.date.year}/${this.date.mounth}`,"YYYY/MM").daysInMonth() : null
+      return !this.isEmptyObject(this.date)
+        ? moment(
+            `${this.date.year}/${this.date.mounth}`,
+            "YYYY/MM"
+          ).daysInMonth()
+        : null;
     },
     weekDay() {
       return this.date
         ? moment(`${this.date.year}/${this.date.mounth}/01`).isoWeekday() - 1
         : null;
     },
-    formation(){return this.$store.getters.formation},
-  }
+    formation() {
+      return this.$store.getters.formation;
+    },
+  },
 };
 </script>
 
@@ -319,81 +391,4 @@ export default {
       color: $text_on_accent
       span
         margin: 20px
-    .body
-      grid-area: bodys
-      width: 100%
-      display: grid
-      grid-template-columns: repeat(7, 1fr )
-      .item
-        height: 100%
-        position: relative
-        height: auto
-        display: grid
-        grid-template-areas: 'glif' 'naIn'
-        border: 1px solid $accent
-        padding: 40px 0 20px 0
-        .time
-          height: 30px
-          position: absolute
-          top: 0
-          right: 0
-          background-color: red
-          color: white
-          border-radius: 0 0 0 5px 
-          padding: 5px 10px
-          font-size: 1em
-        .dayNum
-          height: 30px
-          position: absolute
-          margin: 5px
-          grid-area: daynum
-          border-top: 1px solid $accent
-          border-right: 1px solid $accent
-          border-bottom: 1px solid $accent
-          border-radius: 0 0 5px 0
-          width: 30px
-          top: -6px
-          left: -5px
-          font-size: 1em
-          display: flex
-          justify-content: center
-          align-items: center
-        .glif
-          grid-area: glif
-          display: grid
-          grid-template-columns: repeat(auto-fit, 1fr)
-          grid-template-areas: 'day mounth year'
-          .day
-            grid-area: day
-          .mounth
-            grid-area: mounth
-          .year
-            grid-area: year
-        .naIn
-          display: grid
-          grid-area: naIn
-          grid-template-columns: repeat(auto-fit, 1fr)
-          grid-template-areas: 'day mounth year'
-          border-top: 1px dashed $accent
-          .day
-            grid-area: day
-            text-align: center
-            font-size: 2em
-          .mounth
-            grid-area: mounth
-            text-align: center
-            font-size: 2em
-          .year
-            grid-area: year
-            text-align: center
-            font-size: 2em
-        &:nth-child(7n)
-          background-color: rgba($accent,.3)
-        &:nth-child(6),&:nth-child(13),&:nth-child(20),&:nth-child(27),&:nth-child(34)
-          background-color: rgba($accent,.3)
-        &:hover
-          background-color: rgba($accent,.1)
-        &.none
-          background-color: rgba($item_none,.3)
-          border: 1px solid transparent
 </style>
