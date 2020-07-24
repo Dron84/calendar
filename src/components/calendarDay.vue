@@ -3,9 +3,11 @@
     <div class="item none" v-for="i in weekDay" :key="`${i}_weekDay`"></div>
 
     <div class="item" v-for="i in calendar" :key="`${i.dayNum}_day`">
-      <span class="time" v-if="i.glif.day.timeOn">{{
+      <span class="time" v-if="i.glif.day.timeOn">
+        {{
         i.glif.day.timeMounthBegin
-      }}</span>
+        }}
+      </span>
       <span class="dayNum">{{ i.dayNum }}</span>
       <div class="glif">
         <div class="day">
@@ -45,10 +47,10 @@ export default {
   data: () => ({}),
   props: {
     calendar: null,
-    weekDay: null,
+    weekDay: null
   },
   methods: {},
-  computed: {},
+  computed: {}
 };
 </script>
 <style lang="sass">
@@ -64,6 +66,7 @@ export default {
     height: auto
     display: grid
     grid-template-areas: 'glif' 'naIn' 'caption'
+    grid-template-rows: .33fr .33fr .33fr
     border: 1px solid $accent
     padding: 40px 0 20px 0
     .time

@@ -252,6 +252,7 @@ export default {
       }
     },
     FormationCaption(calendar) {
+      /// установление
       const formation = this.$store.getters.formation;
       let id = calendar.filter(
         item => item.glif.day.ground === item.glif.mounth.ground
@@ -301,7 +302,6 @@ export default {
         }
         return { dop, index };
       };
-      console.log(`dopIndexBefore()`, dopIndexBefore());
       calendar.map((item, index) => {
         const fi = !dopIndexBefore().dop
           ? item.dayNum + 12 - id[0].dayNum
@@ -323,6 +323,440 @@ export default {
             index > dopIndexBefore().index &&
             calendar[index].caption.push(`${fi}. ${formation[fi - 1]}`);
       });
+      return calendar;
+    },
+    collisionsCaption(calendar) {
+      /// столкновения
+      const collisions = (first, second, caption) =>
+        ((first === "子" && second === "午") ||
+          (first === "丑" && second === "未") ||
+          (first === "寅" && second === "申") ||
+          (first === "卯" && second === "酉") ||
+          (first === "亥" && second === "巳") ||
+          (first === "辰" && second === "戌") ||
+          (second === "子" && first === "午") ||
+          (second === "丑" && first === "未") ||
+          (second === "寅" && first === "申") ||
+          (second === "卯" && first === "酉") ||
+          (second === "亥" && first === "巳") ||
+          (second === "辰" && first === "戌")) &&
+        `Столкновение ${caption}`;
+
+      calendar.map(item => {
+        const day_mounth = collisions(
+          item.glif.day.ground,
+          item.glif.mounth.ground,
+          "день/месяц"
+        );
+        const day_year = collisions(
+          item.glif.day.ground,
+          item.glif.year.ground,
+          "день/год"
+        );
+        const mounth_year = collisions(
+          item.glif.mounth.ground,
+          item.glif.year.ground,
+          "месяц/год"
+        );
+        !this.isEmptyObject(day_mounth) && item.caption.push(day_mounth);
+        !this.isEmptyObject(day_year) && item.caption.push(day_year);
+        !this.isEmptyObject(mounth_year) && item.caption.push(mounth_year);
+      });
+      return calendar;
+    },
+    directCollision(calendar) {
+      /// прямое столкновение
+      const collisions = (
+        dayTop,
+        dayBottom,
+        checkTop,
+        checkBottom,
+        caption
+      ) => {
+        let result;
+        dayTop === "甲" &&
+          dayBottom === "子" &&
+          ((checkTop === "戊" && checkBottom === "午") ||
+            (checkTop === "壬" && checkBottom === "午")) &&
+          (result = `Прямое столкновение ${caption}`);
+        dayTop === "丙" &&
+          dayBottom === "子" &&
+          ((checkTop === "庚" && checkBottom === "午") ||
+            (checkTop === "戊" && checkBottom === "午")) &&
+          (result = `Прямое столкновение ${caption}`);
+        dayTop === "戊" &&
+          dayBottom === "子" &&
+          ((checkTop === "甲" && checkBottom === "午") ||
+            (checkTop === "壬" && checkBottom === "午")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "庚" &&
+          dayBottom === "子" &&
+          ((checkTop === "甲" && checkBottom === "午") ||
+            (checkTop === "丙" && checkBottom === "午")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "壬" &&
+          dayBottom === "子" &&
+          ((checkTop === "丙" && checkBottom === "午") ||
+            (checkTop === "庚" && checkBottom === "午")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "乙" &&
+          dayBottom === "丑" &&
+          ((checkTop === "癸" && checkBottom === "未") ||
+            (checkTop === "己" && checkBottom === "未")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "丁" &&
+          dayBottom === "丑" &&
+          ((checkTop === "己" && checkBottom === "未") ||
+            (checkTop === "辛" && checkBottom === "未")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "己" &&
+          dayBottom === "丑" &&
+          ((checkTop === "癸" && checkBottom === "未") ||
+            (checkTop === "乙" && checkBottom === "未")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "辛" &&
+          dayBottom === "丑" &&
+          ((checkTop === "乙" && checkBottom === "未") ||
+            (checkTop === "丁" && checkBottom === "未")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "癸" &&
+          dayBottom === "丑" &&
+          ((checkTop === "丁" && checkBottom === "未") ||
+            (checkTop === "辛" && checkBottom === "未")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "丙" &&
+          dayBottom === "寅" &&
+          ((checkTop === "壬" && checkBottom === "申") ||
+            (checkTop === "戊" && checkBottom === "申")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "戊" &&
+          dayBottom === "寅" &&
+          ((checkTop === "壬" && checkBottom === "申") ||
+            (checkTop === "甲" && checkBottom === "申")) &&
+          (result = `Прямое столкновение ${caption}`);
+        dayTop === "庚" &&
+          dayBottom === "寅" &&
+          ((checkTop === "甲" && checkBottom === "申") ||
+            (checkTop === "戊" && checkBottom === "申")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "壬" &&
+          dayBottom === "寅" &&
+          ((checkTop === "丙" && checkBottom === "申") ||
+            (checkTop === "庚" && checkBottom === "申")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "甲" &&
+          dayBottom === "寅" &&
+          ((checkTop === "丙" && checkBottom === "申") ||
+            (checkTop === "戊" && checkBottom === "申")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "丁" &&
+          dayBottom === "卯" &&
+          ((checkTop === "辛" && checkBottom === "酉") ||
+            (checkTop === "癸" && checkBottom === "酉")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "己" &&
+          dayBottom === "卯" &&
+          ((checkTop === "癸" && checkBottom === "酉") ||
+            (checkTop === "乙" && checkBottom === "酉")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "辛" &&
+          dayBottom === "卯" &&
+          ((checkTop === "己" && checkBottom === "酉") ||
+            (checkTop === "乙" && checkBottom === "酉")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "癸" &&
+          dayBottom === "卯" &&
+          ((checkTop === "丁" && checkBottom === "酉") ||
+            (checkTop === "辛" && checkBottom === "酉")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "乙" &&
+          dayBottom === "卯" &&
+          ((checkTop === "己" && checkBottom === "酉") ||
+            (checkTop === "丁" && checkBottom === "酉")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "戊" &&
+          dayBottom === "辰" &&
+          ((checkTop === "丙" && checkBottom === "戊") ||
+            (checkTop === "壬" && checkBottom === "戊")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "庚" &&
+          dayBottom === "辰" &&
+          ((checkTop === "甲" && checkBottom === "戊") ||
+            (checkTop === "戊" && checkBottom === "戊")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "壬" &&
+          dayBottom === "辰" &&
+          ((checkTop === "丙" && checkBottom === "戊") ||
+            (checkTop === "甲" && checkBottom === "戊")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "甲" &&
+          dayBottom === "辰" &&
+          ((checkTop === "庚" && checkBottom === "戊") ||
+            (checkTop === "戊" && checkBottom === "戊")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "丙" &&
+          dayBottom === "辰" &&
+          ((checkTop === "壬" && checkBottom === "戊") ||
+            (checkTop === "庚" && checkBottom === "戊")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "己" &&
+          dayBottom === "巳" &&
+          ((checkTop === "癸" && checkBottom === "亥") ||
+            (checkTop === "丁" && checkBottom === "亥")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "己辛" &&
+          dayBottom === "巳" &&
+          ((checkTop === "乙" && checkBottom === "亥") ||
+            (checkTop === "己" && checkBottom === "亥")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "癸" &&
+          dayBottom === "巳" &&
+          ((checkTop === "丁" && checkBottom === "亥") ||
+            (checkTop === "乙" && checkBottom === "亥")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "乙" &&
+          dayBottom === "巳" &&
+          ((checkTop === "辛" && checkBottom === "亥") ||
+            (checkTop === "己" && checkBottom === "亥")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "丁" &&
+          dayBottom === "巳" &&
+          ((checkTop === "癸" && checkBottom === "亥") ||
+            (checkTop === "辛" && checkBottom === "亥")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "庚" &&
+          dayBottom === "午" &&
+          ((checkTop === "甲" && checkBottom === "子") ||
+            (checkTop === "丙" && checkBottom === "子")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "壬" &&
+          dayBottom === "午" &&
+          ((checkTop === "丙" && checkBottom === "子") ||
+            (checkTop === "庚" && checkBottom === "子")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "甲" &&
+          dayBottom === "午" &&
+          ((checkTop === "戊" && checkBottom === "子") ||
+            (checkTop === "壬" && checkBottom === "子")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "丙" &&
+          dayBottom === "午" &&
+          ((checkTop === "戊" && checkBottom === "子") ||
+            (checkTop === "庚" && checkBottom === "子")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "戊" &&
+          dayBottom === "午" &&
+          ((checkTop === "甲" && checkBottom === "子") ||
+            (checkTop === "壬" && checkBottom === "子")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "辛" &&
+          dayBottom === "未" &&
+          ((checkTop === "丁" && checkBottom === "丑") ||
+            (checkTop === "己" && checkBottom === "丑")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "癸" &&
+          dayBottom === "未" &&
+          ((checkTop === "丁" && checkBottom === "丑") ||
+            (checkTop === "辛" && checkBottom === "丑")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "乙" &&
+          dayBottom === "未" &&
+          ((checkTop === "癸" && checkBottom === "丑") ||
+            (checkTop === "己" && checkBottom === "丑")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "丁" &&
+          dayBottom === "未" &&
+          ((checkTop === "己" && checkBottom === "丑") ||
+            (checkTop === "辛" && checkBottom === "丑")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "己" &&
+          dayBottom === "未" &&
+          ((checkTop === "癸" && checkBottom === "丑") ||
+            (checkTop === "乙" && checkBottom === "丑")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "壬" &&
+          dayBottom === "申" &&
+          ((checkTop === "丙" && checkBottom === "寅") ||
+            (checkTop === "庚" && checkBottom === "寅")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "甲" &&
+          dayBottom === "申" &&
+          ((checkTop === "丙" && checkBottom === "寅") ||
+            (checkTop === "戊" && checkBottom === "寅")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "丙" &&
+          dayBottom === "申" &&
+          ((checkTop === "壬" && checkBottom === "寅") ||
+            (checkTop === "庚" && checkBottom === "寅")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "戊" &&
+          dayBottom === "申" &&
+          ((checkTop === "壬" && checkBottom === "寅") ||
+            (checkTop === "甲" && checkBottom === "寅")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "庚" &&
+          dayBottom === "申" &&
+          ((checkTop === "甲" && checkBottom === "寅") ||
+            (checkTop === "戊" && checkBottom === "寅")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "癸" &&
+          dayBottom === "酉" &&
+          ((checkTop === "丁" && checkBottom === "卯") ||
+            (checkTop === "辛" && checkBottom === "卯")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "乙" &&
+          dayBottom === "酉" &&
+          ((checkTop === "丁" && checkBottom === "卯") ||
+            (checkTop === "己" && checkBottom === "卯")) &&
+          (result = `Прямое столкновение ${caption}`);
+        dayTop === "丁" &&
+          dayBottom === "酉" &&
+          ((checkTop === "癸" && checkBottom === "卯") ||
+            (checkTop === "辛" && checkBottom === "卯")) &&
+          (result = `Прямое столкновение ${caption}`);
+        dayTop === "己" &&
+          dayBottom === "酉" &&
+          ((checkTop === "癸" && checkBottom === "卯") ||
+            (checkTop === "乙" && checkBottom === "卯")) &&
+          (result = `Прямое столкновение ${caption}`);
+        dayTop === "辛" &&
+          dayBottom === "酉" &&
+          ((checkTop === "乙" && checkBottom === "卯") ||
+            (checkTop === "己" && checkBottom === "卯")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "甲" &&
+          dayBottom === "戌" &&
+          ((checkTop === "戊" && checkBottom === "辰") ||
+            (checkTop === "庚" && checkBottom === "辰")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "丙" &&
+          dayBottom === "戌" &&
+          ((checkTop === "壬" && checkBottom === "辰") ||
+            (checkTop === "庚" && checkBottom === "辰")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "戊" &&
+          dayBottom === "戌" &&
+          ((checkTop === "壬" && checkBottom === "辰") ||
+            (checkTop === "丙" && checkBottom === "辰")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "庚" &&
+          dayBottom === "戌" &&
+          ((checkTop === "甲" && checkBottom === "辰") ||
+            (checkTop === "戊" && checkBottom === "辰")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "壬" &&
+          dayBottom === "戌" &&
+          ((checkTop === "甲" && checkBottom === "辰") ||
+            (checkTop === "丙" && checkBottom === "辰")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "乙" &&
+          dayBottom === "亥" &&
+          ((checkTop === "己" && checkBottom === "巳") ||
+            (checkTop === "辛" && checkBottom === "巳")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "丁" &&
+          dayBottom === "亥" &&
+          ((checkTop === "癸" && checkBottom === "巳") ||
+            (checkTop === "辛" && checkBottom === "巳")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "己" &&
+          dayBottom === "亥" &&
+          ((checkTop === "癸" && checkBottom === "巳") ||
+            (checkTop === "丁" && checkBottom === "巳")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "辛" &&
+          dayBottom === "亥" &&
+          ((checkTop === "乙" && checkBottom === "巳") ||
+            (checkTop === "己" && checkBottom === "巳")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        dayTop === "癸" &&
+          dayBottom === "亥" &&
+          ((checkTop === "乙" && checkBottom === "巳") ||
+            (checkTop === "丁" && checkBottom === "巳")) &&
+          (result = `Прямое столкновение ${caption}`);
+
+        return result;
+      };
+      calendar.map(item => {
+        const day_mounth = collisions(
+          item.glif.day.sky,
+          item.glif.day.ground,
+          item.glif.mounth.sky,
+          item.glif.mounth.ground,
+          "день/месяц"
+        );
+        const day_year = collisions(
+          item.glif.day.sky,
+          item.glif.day.ground,
+          item.glif.year.sky,
+          item.glif.year.ground,
+          "день/год"
+        );
+        const mounth_year = collisions(
+          item.glif.mounth.sky,
+          item.glif.mounth.ground,
+          item.glif.year.sky,
+          item.glif.year.ground,
+          "месяц/год"
+        );
+        !this.isEmptyObject(day_mounth) && item.caption.push(day_mounth);
+        !this.isEmptyObject(day_year) && item.caption.push(day_year);
+        !this.isEmptyObject(mounth_year) && item.caption.push(mounth_year);
+      });
+
       return calendar;
     },
     generateCalendar() {
@@ -355,8 +789,14 @@ export default {
         });
       }
       const calendarWithFormation = this.FormationCaption(calendar);
+      const calendarWithCollisionsCaption = this.collisionsCaption(
+        calendarWithFormation
+      );
+      const directCollision = this.directCollision(
+        calendarWithCollisionsCaption
+      );
 
-      return calendarWithFormation;
+      return directCollision;
     }
   },
   computed: {
