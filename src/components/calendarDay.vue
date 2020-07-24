@@ -31,6 +31,11 @@
           <span :class="i.naIn.year.color">{{ i.naIn.year.caption }}</span>
         </div>
       </div>
+      <div class="fazi">
+        <div class="day hoverTitle" :data-title="i.fazi.day">{{i.fazi.day.slice(0,3)}}</div>
+        <div class="mounth hoverTitle" :data-title="i.fazi.mounth">{{i.fazi.mounth.slice(0,3)}}</div>
+        <div class="year hoverTitle" :data-title="i.fazi.year">{{i.fazi.year.slice(0,3)}}</div>
+      </div>
       <div class="caption">
         <ul>
           <li v-for="(cap, index) of i.caption" :key="index">{{ cap }}</li>
@@ -65,8 +70,8 @@ export default {
     position: relative
     height: auto
     display: grid
-    grid-template-areas: 'glif' 'naIn' 'caption'
-    grid-template-rows: .33fr .33fr .33fr
+    grid-template-areas: 'glif' 'naIn' 'fazi' 'caption'
+    grid-template-rows: .33fr .33fr 20px .33fr
     border: 1px solid $accent
     padding: 40px 0 20px 0
     .time
@@ -106,24 +111,28 @@ export default {
         grid-area: mounth
       .year
         grid-area: year
-    .naIn
+    .naIn,.fazi
       display: grid
-      grid-area: naIn
       grid-template-columns: repeat(auto-fit, 1fr)
       grid-template-areas: 'day mounth year'
       border-top: 1px dashed $accent
       .day
         grid-area: day
         text-align: center
-        font-size: 2em
       .mounth
         grid-area: mounth
         text-align: center
-        font-size: 2em
       .year
         grid-area: year
         text-align: center
+    .naIn
+      grid-area: naIn
+      .day, .mounth, .year
         font-size: 2em
+    .fazi
+      grid-area: fazi
+      .day, .mounth, .year
+        font-size: .9em
     &:nth-child(7n)
       background-color: rgba($accent,.3)
     &:nth-child(6),&:nth-child(13),&:nth-child(20),&:nth-child(27),&:nth-child(34)

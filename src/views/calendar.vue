@@ -341,6 +341,22 @@ export default {
           (second === "亥" && first === "巳") ||
           (second === "辰" && first === "戌")) &&
         `Столкновение ${caption}`;
+      const collisionsDont = first => {
+        let result;
+        first === "午" && (result = "Не подходит для крысы");
+        first === "未" && (result = "Не подходит для быка");
+        first === "申" && (result = "Не подходит для тигра");
+        first === "酉" && (result = "Не подходит для кролика");
+        first === "巳" && (result = "Не подходит для свиньи");
+        first === "戌" && (result = "Не подходит для дракона");
+        first === "午" && (result = "Не подходит для лошади");
+        first === "未" && (result = "Не подходит для козы");
+        first === "申" && (result = "Не подходит для обезъяны");
+        first === "酉" && (result = "Не подходит для петуха");
+        first === "巳" && (result = "Не подходит для змеи");
+        first === "戌" && (result = "Не подходит для собаки");
+        return result;
+      };
 
       calendar.map(item => {
         const day_mounth = collisions(
@@ -358,9 +374,15 @@ export default {
           item.glif.year.ground,
           "месяц/год"
         );
+        // добавление столкновений
         !this.isEmptyObject(day_mounth) && item.caption.push(day_mounth);
         !this.isEmptyObject(day_year) && item.caption.push(day_year);
         !this.isEmptyObject(mounth_year) && item.caption.push(mounth_year);
+
+        // добавление неподходящих столкновений
+        const dayscollisionsDont = collisionsDont(item.glif.day.ground);
+        !this.isEmptyObject(dayscollisionsDont) &&
+          item.caption.push(dayscollisionsDont);
       });
       return calendar;
     },
@@ -759,6 +781,548 @@ export default {
 
       return calendar;
     },
+    SHA(calendar) {
+      //Поиск ША
+
+      const findSHA = (firstGroung, secondGround, caption) => {
+        let result;
+        firstGroung === "寅" && secondGround === "亥"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "寅" && secondGround === "子"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "寅" &&
+            secondGround === "丑" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "卯" && secondGround === "申"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "卯" && secondGround === "酉"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "卯" &&
+            secondGround === "戌" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "辰" && secondGround === "巳"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "辰" && secondGround === "午"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "辰" &&
+            secondGround === "未" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "巳" && secondGround === "寅"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "巳" && secondGround === "卯"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "巳" &&
+            secondGround === "辰" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "午" && secondGround === "亥"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "午" && secondGround === "子"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "午" &&
+            secondGround === "丑" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "未" && secondGround === "申"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "未" && secondGround === "酉"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "未" &&
+            secondGround === "戌" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "申" && secondGround === "巳"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "申" && secondGround === "午"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "申" &&
+            secondGround === "未" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "酉" && secondGround === "寅"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "酉" && secondGround === "卯"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "酉" &&
+            secondGround === "辰" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "戌" && secondGround === "亥"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "戌" && secondGround === "子"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "戌" &&
+            secondGround === "丑" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "亥" && secondGround === "申"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "亥" && secondGround === "酉"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "亥" &&
+            secondGround === "戌" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "子" && secondGround === "巳"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "子" && secondGround === "午"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "子" &&
+            secondGround === "未" &&
+            (result = `Ша задержки ${caption}`);
+
+        firstGroung === "丑" && secondGround === "寅"
+          ? (result = `Ша ограбление ${caption}`)
+          : firstGroung === "丑" && secondGround === "卯"
+          ? (result = `Ша несчастья ${caption}`)
+          : firstGroung === "丑" &&
+            secondGround === "辰" &&
+            (result = `Ша задержки ${caption}`);
+
+        return result;
+      };
+      calendar.map(item => {
+        const year = findSHA(
+          item.glif.year.ground,
+          item.glif.day.ground,
+          "года"
+        );
+        const mounth = findSHA(
+          item.glif.mounth.ground,
+          item.glif.day.ground,
+          "месяца"
+        );
+        !this.isEmptyObject(mounth) && item.caption.push(mounth);
+        !this.isEmptyObject(year) && item.caption.push(year);
+      });
+      return calendar;
+    },
+    Fazi(calendar) {
+      const findFaz = (sky, ground) => {
+        let result;
+        switch (sky) {
+          case "甲":
+            switch (ground) {
+              case "亥":
+                result = "Рождение";
+                break;
+              case "子":
+                result = "Купание";
+                break;
+              case "丑":
+                result = "Шапка и Пояс";
+                break;
+              case "寅":
+                result = "Поступление на службу";
+                break;
+              case "卯":
+                result = "Императорский светильник";
+                break;
+              case "辰":
+                result = "Ослабление";
+                break;
+              case "巳":
+                result = "Болезнь";
+                break;
+              case "午":
+                result = "Смерть";
+                break;
+              case "未":
+                result = "Могила";
+                break;
+              case "申":
+                result = "Разложение";
+                break;
+              case "酉":
+                result = "Эмбрион";
+                break;
+              case "戌":
+                result = "Питание";
+                break;
+            }
+            break;
+          case "乙":
+            switch (ground) {
+              case "亥":
+                result = "Рождение";
+                break;
+              case "子":
+                result = "Купание";
+                break;
+              case "丑":
+                result = "Шапка и Пояс";
+                break;
+              case "寅":
+                result = "Поступление на службу";
+                break;
+              case "卯":
+                result = "Императорский светильник";
+                break;
+              case "辰":
+                result = "Ослабление";
+                break;
+              case "巳":
+                result = "Болезнь";
+                break;
+              case "午":
+                result = "Смерть";
+                break;
+              case "未":
+                result = "Могила";
+                break;
+              case "申":
+                result = "Разложение";
+                break;
+              case "酉":
+                result = "Эмбрион";
+                break;
+              case "戌":
+                result = "Питание";
+                break;
+            }
+            break;
+          case "丙":
+            switch (ground) {
+              case "寅":
+                result = "Рождение";
+                break;
+              case "卯":
+                result = "Купание";
+                break;
+              case "辰":
+                result = "Шапка и Пояс";
+                break;
+              case "巳":
+                result = "Поступление на службу";
+                break;
+              case "午":
+                result = "Императорский светильник";
+                break;
+              case "未":
+                result = "Ослабление";
+                break;
+              case "申":
+                result = "Болезнь";
+                break;
+              case "酉":
+                result = "Смерть";
+                break;
+              case "戌":
+                result = "Могила";
+                break;
+              case "亥":
+                result = "Разложение";
+                break;
+              case "子":
+                result = "Эмбрион";
+                break;
+              case "丑":
+                result = "Питание";
+                break;
+            }
+            break;
+          case "丁":
+            switch (ground) {
+              case "酉":
+                result = "Рождение";
+                break;
+              case "申":
+                result = "Купание";
+                break;
+              case "未":
+                result = "Шапка и Пояс";
+                break;
+              case "午":
+                result = "Поступление на службу";
+                break;
+              case "巳":
+                result = "Императорский светильник";
+                break;
+              case "辰":
+                result = "Ослабление";
+                break;
+              case "卯":
+                result = "Болезнь";
+                break;
+              case "寅":
+                result = "Смерть";
+                break;
+              case "丑":
+                result = "Могила";
+                break;
+              case "子":
+                result = "Разложение";
+                break;
+              case "亥":
+                result = "Эмбрион";
+                break;
+              case "戌":
+                result = "Питание";
+                break;
+            }
+            break;
+          case "戊":
+            switch (ground) {
+              case "寅":
+                result = "Рождение";
+                break;
+              case "卯":
+                result = "Купание";
+                break;
+              case "辰":
+                result = "Шапка и Пояс";
+                break;
+              case "巳":
+                result = "Поступление на службу";
+                break;
+              case "午":
+                result = "Императорский светильник";
+                break;
+              case "未":
+                result = "Ослабление";
+                break;
+              case "申":
+                result = "Болезнь";
+                break;
+              case "酉":
+                result = "Смерть";
+                break;
+              case "戌":
+                result = "Могила";
+                break;
+              case "亥":
+                result = "Разложение";
+                break;
+              case "子":
+                result = "Эмбрион";
+                break;
+              case "丑":
+                result = "Питание";
+                break;
+            }
+            break;
+
+          case "己":
+            switch (ground) {
+              case "酉":
+                result = "Рождение";
+                break;
+              case "申":
+                result = "Купание";
+                break;
+              case "未":
+                result = "Шапка и Пояс";
+                break;
+              case "午":
+                result = "Поступление на службу";
+                break;
+              case "巳":
+                result = "Императорский светильник";
+                break;
+              case "辰":
+                result = "Ослабление";
+                break;
+              case "卯":
+                result = "Болезнь";
+                break;
+              case "寅":
+                result = "Смерть";
+                break;
+              case "丑":
+                result = "Могила";
+                break;
+              case "子":
+                result = "Разложение";
+                break;
+              case "亥":
+                result = "Эмбрион";
+                break;
+              case "戌":
+                result = "Питание";
+                break;
+            }
+            break;
+
+          case "庚":
+            switch (ground) {
+              case "巳":
+                result = "Рождение";
+                break;
+              case "午":
+                result = "Купание";
+                break;
+              case "未":
+                result = "Шапка и Пояс";
+                break;
+              case "申":
+                result = "Поступление на службу";
+                break;
+              case "酉":
+                result = "Императорский светильник";
+                break;
+              case "戌":
+                result = "Ослабление";
+                break;
+              case "亥":
+                result = "Болезнь";
+                break;
+              case "子":
+                result = "Смерть";
+                break;
+              case "丑":
+                result = "Могила";
+                break;
+              case "寅":
+                result = "Разложение";
+                break;
+              case "卯":
+                result = "Эмбрион";
+                break;
+              case "辰":
+                result = "Питание";
+                break;
+            }
+            break;
+
+          case "辛":
+            switch (ground) {
+              case "子":
+                result = "Рождение";
+                break;
+              case "亥":
+                result = "Купание";
+                break;
+              case "戌":
+                result = "Шапка и Пояс";
+                break;
+              case "酉":
+                result = "Поступление на службу";
+                break;
+              case "申":
+                result = "Императорский светильник";
+                break;
+              case "未":
+                result = "Ослабление";
+                break;
+              case "午":
+                result = "Болезнь";
+                break;
+              case "巳":
+                result = "Смерть";
+                break;
+              case "辰":
+                result = "Могила";
+                break;
+              case "卯":
+                result = "Разложение";
+                break;
+              case "寅":
+                result = "Эмбрион";
+                break;
+              case "丑":
+                result = "Питание";
+                break;
+            }
+            break;
+
+          case "壬":
+            switch (ground) {
+              case "申":
+                result = "Рождение";
+                break;
+              case "酉":
+                result = "Купание";
+                break;
+              case "戌":
+                result = "Шапка и Пояс";
+                break;
+              case "亥":
+                result = "Поступление на службу";
+                break;
+              case "子":
+                result = "Императорский светильник";
+                break;
+              case "丑":
+                result = "Ослабление";
+                break;
+              case "寅":
+                result = "Болезнь";
+                break;
+              case "卯":
+                result = "Смерть";
+                break;
+              case "辰":
+                result = "Могила";
+                break;
+              case "巳":
+                result = "Разложение";
+                break;
+              case "午":
+                result = "Эмбрион";
+                break;
+              case "未":
+                result = "Питание";
+                break;
+            }
+            break;
+
+          case "癸":
+            switch (ground) {
+              case "卯":
+                result = "Рождение";
+                break;
+              case "寅":
+                result = "Купание";
+                break;
+              case "丑":
+                result = "Шапка и Пояс";
+                break;
+              case "子":
+                result = "Поступление на службу";
+                break;
+              case "亥":
+                result = "Императорский светильник";
+                break;
+              case "戌":
+                result = "Ослабление";
+                break;
+              case "酉":
+                result = "Болезнь";
+                break;
+              case "申":
+                result = "Смерть";
+                break;
+              case "未":
+                result = "Могила";
+                break;
+              case "午":
+                result = "Разложение";
+                break;
+              case "巳":
+                result = "Эмбрион";
+                break;
+              case "辰":
+                result = "Питание";
+                break;
+            }
+            break;
+        }
+        return result;
+      };
+
+      calendar.map(item => {
+        item.fazi.day = findFaz(item.glif.day.sky, item.glif.day.ground);
+        item.fazi.mounth = findFaz(
+          item.glif.mounth.sky,
+          item.glif.mounth.ground
+        );
+        item.fazi.year = findFaz(item.glif.year.sky, item.glif.year.ground);
+      });
+      return calendar;
+    },
     generateCalendar() {
       const calendar = [];
       for (let i = 1; i < this.dayInMounth; i++) {
@@ -772,6 +1336,11 @@ export default {
         const naIn_day = this.naIn(day);
         const naIn_mounth = this.naIn(mounth);
         const naIn_year = this.naIn(year);
+        const fazi = {
+          day: "",
+          mounth: "",
+          year: ""
+        };
         const caption = [];
         calendar.push({
           dayNum: i,
@@ -785,18 +1354,18 @@ export default {
             mounth: { ...naIn_mounth },
             year: { ...naIn_year }
           },
+          fazi,
           caption
         });
       }
-      const calendarWithFormation = this.FormationCaption(calendar);
-      const calendarWithCollisionsCaption = this.collisionsCaption(
-        calendarWithFormation
-      );
-      const directCollision = this.directCollision(
-        calendarWithCollisionsCaption
-      );
 
-      return directCollision;
+      return this.Fazi(
+        this.SHA(
+          this.directCollision(
+            this.collisionsCaption(this.FormationCaption(calendar))
+          )
+        )
+      );
     }
   },
   computed: {
@@ -877,4 +1446,24 @@ export default {
       color: $text_on_accent
       span
         margin: 20px
+.hoverTitle
+  position: relative
+  &::after
+    position: absolute
+    width: 150px
+    top: 50px
+    left: 0px
+    content: attr(data-title)
+    font-size: 18px
+    color: black
+    background-color: white
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+    visibility: hidden
+    opacity: 0
+    z-index: 99999
+    border-radius: 5px
+  &:hover
+    &::after
+      visibility: visible
+      opacity: 1
 </style>
