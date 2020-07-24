@@ -5,9 +5,7 @@
         <img src="https://nadezhda-kalinina.com/img/icon/logo.svg" />
       </div>
       <div class="info">
-        <h1>
-          Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.
-        </h1>
+        <h1>Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.</h1>
         <dates v-model="date" />
       </div>
     </div>
@@ -22,9 +20,7 @@
         </div>
       </aside>
       <header>
-        <span v-for="day in Array.from(daysTitle)" :key="day.index">
-          {{ day.nameRu }}
-        </span>
+        <span v-for="day in Array.from(daysTitle)" :key="day.index">{{ day.nameRu }}</span>
       </header>
 
       <calendarDay :calendar="generateCalendar()" :weekDay="weekDay" />
@@ -50,7 +46,7 @@ export default {
     miss: null,
     date: {
       mounth,
-      year,
+      year
     },
     daysTitle: [
       { nameEng: "Mon", nameRu: "ПН", index: 1 },
@@ -59,10 +55,10 @@ export default {
       { nameEng: "Thu", nameRu: "ЧТ", index: 4 },
       { nameEng: "Fri", nameRu: "ПТ", index: 5 },
       { nameEng: "Sat", nameRu: "СБ", index: 6 },
-      { nameEng: "Sun", nameRu: "ВС", index: 7 },
+      { nameEng: "Sun", nameRu: "ВС", index: 7 }
     ],
     bacziData,
-    mounthBegin,
+    mounthBegin
   }),
   methods: {
     findDayFirstDayInMounth() {
@@ -125,7 +121,7 @@ export default {
           : this.mounthBegin[this.date.year][this.date.mounth - 1].begin_date;
       return {
         ...this.bacziData.filter(
-          (item) =>
+          item =>
             Number(item.id) ===
             (this.date.mounth === 1
               ? getMountCorrection(this.date.year, 12, false, 1)
@@ -133,14 +129,14 @@ export default {
               ? getMountCorrection(this.date.year, this.date.mounth - 1, true)
               : getMountCorrection(this.date.year, this.date.mounth - 1))
         )[0].data,
-        MounthBegin,
+        MounthBegin
       };
     },
     getBacziDays() {
-      const getCorrectionNumber = (num) =>
+      const getCorrectionNumber = num =>
         num > 60 ? num - 60 : num < 0 ? 60 + num : num;
       const getBacziInRange = (first, second) =>
-        this.bacziData.filter((item) => item.id >= first && item.id <= second);
+        this.bacziData.filter(item => item.id >= first && item.id <= second);
       const getBacziArr = (firstDay, countOfDays) =>
         60 - countOfDays > firstDay
           ? getBacziInRange(firstDay, firstDay + countOfDays)
@@ -151,10 +147,10 @@ export default {
                 getCorrectionNumber(
                   this.findDayFirstDayInMounth() + this.dayInMounth
                 )
-              ),
+              )
             ];
       return getBacziArr(this.findDayFirstDayInMounth(), this.dayInMounth).map(
-        (item) => item.data
+        item => item.data
       );
     },
     getBacziYear(i) {
@@ -169,12 +165,12 @@ export default {
           : this.date.mounth < Number(yearBegin[2])
           ? Number(this.mounthBegin[this.date.year - 1].correction)
           : Number(this.mounthBegin[this.date.year].correction);
-      return this.bacziData.filter((item) => Number(item.id) === correction)[0]
+      return this.bacziData.filter(item => Number(item.id) === correction)[0]
         .data;
     },
     mounthCaption() {
       return this.$store.getters.mounthArray.filter(
-        (item) => Number(item.id) === this.date.mounth
+        item => Number(item.id) === this.date.mounth
       )[0].name;
     },
     naIn(stolp) {
@@ -256,29 +252,77 @@ export default {
       }
     },
     FormationCaption(calendar) {
-      console.log(`calendar`, calendar);
       const formation = this.$store.getters.formation;
       let id = calendar.filter(
-        (item, index) =>
-          item.glif.day.ground === item.glif.mounth.ground && index
+        item => item.glif.day.ground === item.glif.mounth.ground
       );
-      const pushCalendar = (index, formationIndex) =>
-        calendar[index] !== undefined &&
-        calendar[index].caption.push(
-          `${formationIndex}. ${formation[formationIndex]}`
-        );
-
-      id.map((day) => {
+      id.map(day => {
         calendar.map((item, index) => {
+          let dopIndex = false;
           if (item.dayNum === day.dayNum) {
-            for (let i = 0; i < 11; i++) {
-              pushCalendar(index + i, i + 1);
+            const pushCalendar = (index, formationIndex) => {
+              const timeOnFalse = () => {
+                calendar[index].caption.push(
+                  `${formationIndex}. ${
+                    formation[formationIndex - 1]
+                  } / ${formationIndex + 1}. ${formation[formationIndex]}`
+                );
+                dopIndex = true;
+              };
+
+              return calendar[index] !== undefined
+                ? calendar[index].glif.day.timeOn === false
+                  ? !dopIndex
+                    ? formation[formationIndex] !== undefined &&
+                      calendar[index].caption.push(
+                        `${formationIndex + 1}. ${formation[formationIndex]}`
+                      )
+                    : calendar[index].caption.push(
+                        `${formationIndex}. ${formation[formationIndex - 1]}`
+                      )
+                  : timeOnFalse()
+                : false;
+            };
+
+            for (let i = 0; i <= 12; i++) {
+              pushCalendar(index + i, i);
             }
           }
         });
       });
-      console.log(`formation`, formation, id);
-      console.log(`calendar`, calendar);
+      let dopIndexBefore = () => {
+        let dop = false;
+        let index = -1;
+        for (let i = 0; i < id[0].dayNum; i++) {
+          if (calendar[i].glif.day.timeOn === true) {
+            dop = true;
+            index = i;
+          }
+        }
+        return { dop, index };
+      };
+      console.log(`dopIndexBefore()`, dopIndexBefore());
+      calendar.map((item, index) => {
+        const fi = !dopIndexBefore().dop
+          ? item.dayNum + 12 - id[0].dayNum
+          : item.dayNum + 12 - id[0].dayNum + 1;
+        !dopIndexBefore().dop
+          ? item.dayNum < id[0].dayNum &&
+            calendar[index].caption.push(`${fi + 1}. ${formation[fi]}`)
+          : item.dayNum < id[0].dayNum && index < dopIndexBefore().index
+          ? calendar[index].caption.push(`${fi + 1}. ${formation[fi]}`)
+          : item.dayNum < id[0].dayNum && index === dopIndexBefore().index
+          ? fi - 1 !== 11
+            ? calendar[index].caption.push(
+                `${fi}. ${formation[fi - 1]}/${fi + 1}. ${formation[fi]}`
+              )
+            : calendar[index].caption.push(
+                `${fi}. ${formation[fi - 1]}/${1}. ${formation[0]}`
+              )
+          : item.dayNum < id[0].dayNum &&
+            index > dopIndexBefore().index &&
+            calendar[index].caption.push(`${fi}. ${formation[fi - 1]}`);
+      });
       return calendar;
     },
     generateCalendar() {
@@ -300,20 +344,20 @@ export default {
           glif: {
             day,
             mounth,
-            year,
+            year
           },
           naIn: {
             day: { ...naIn_day },
             mounth: { ...naIn_mounth },
-            year: { ...naIn_year },
+            year: { ...naIn_year }
           },
-          caption,
+          caption
         });
       }
       const calendarWithFormation = this.FormationCaption(calendar);
 
       return calendarWithFormation;
-    },
+    }
   },
   computed: {
     dayInMounth() {
@@ -331,8 +375,8 @@ export default {
     },
     formation() {
       return this.$store.getters.formation;
-    },
-  },
+    }
+  }
 };
 </script>
 
