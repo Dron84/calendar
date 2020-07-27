@@ -42,6 +42,7 @@ import { collisionsCaption, directCollision } from "../JS/methods/collisions";
 import { SHA } from "../JS/methods/SHA";
 import { Fazi } from "../JS/methods/Fazi";
 import { Loss } from "../JS/methods/Loss";
+import { whitOutWealth } from "../JS/methods/whitOutWealth";
 
 const mounth = Number(moment().format("MM"));
 const year = Number(moment().format("YYYY"));
@@ -216,10 +217,13 @@ export default {
         });
       }
 
-      return Loss(
-        Fazi(
-          SHA(directCollision(collisionsCaption(FormationCaption(calendar))))
-        )
+      return whitOutWealth(
+        Loss(
+          Fazi(
+            SHA(directCollision(collisionsCaption(FormationCaption(calendar))))
+          )
+        ),
+        this.date.year
       );
     }
   },
