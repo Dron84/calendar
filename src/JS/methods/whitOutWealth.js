@@ -28,7 +28,6 @@ const getWealth = (day, year) =>
     : null;
 
 export const whitOutWealth = (calendar, year) => {
-  console.log(`calendar`, calendar, "year", year);
   calendar.map((item) => {
     const wealth = getWealth(item.glif.day, year);
     !isEmptyObject(wealth) && item.caption.push(wealth);
