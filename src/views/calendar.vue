@@ -13,17 +13,17 @@
     <div class="wrapper">
       <aside>
         <div class="year white_bg sideMargin">
-          <ieroglifs :block="{ ...getBacziYear(15) }" :ieroglifOnly="true" />
+          <ieroglifs :block="{ ...getBacziYear(15,date) }" :ieroglifOnly="true" />
         </div>
         <div class="mounthCaption">
-          <div class="caption">{{ mounthCaption() }}</div>
+          <div class="caption">{{ mounthCaption(mounthArray,date) }}</div>
         </div>
       </aside>
       <header>
         <span v-for="day in Array.from(daysTitle)" :key="day.index">{{ day.nameRu }}</span>
       </header>
 
-      <calendarDay :calendar="generateCalendar()" :weekDay="weekDay" />
+      <calendarDay :calendar="generateCalendar(date,dayInMounth)" :weekDay="weekDay" :date="date" />
     </div>
   </div>
 </template>
@@ -31,18 +31,14 @@
 <script>
 import moment from "moment";
 import dates from "../components/dates";
-import bacziData from "../JS/bacziData";
-import ieroglifs from "../components/ieroglifs";
-import calendarDay from "../components/calendarDay";
-import mounthBegin from "../JS/mounthbegin";
 
-import { naIn } from "../JS/methods/naIn";
-import { FormationCaption } from "../JS/methods/formation";
-import { collisionsCaption, directCollision } from "../JS/methods/collisions";
-import { SHA } from "../JS/methods/SHA";
-import { Fazi } from "../JS/methods/Fazi";
-import { Loss } from "../JS/methods/Loss";
-import { whitOutWealth } from "../JS/methods/whitOutWealth";
+import ieroglifs from "../components/ieroglifs";
+import calendarDay from "../components/calendarDays";
+import {
+  generateCalendar,
+  getBacziYear,
+  mounthCaption
+} from "../JS/methods/index";
 
 const mounth = Number(moment().format("MM"));
 const year = Number(moment().format("YYYY"));
@@ -65,168 +61,12 @@ export default {
       { nameEng: "Sat", nameRu: "СБ", index: 6 },
       { nameEng: "Sun", nameRu: "ВС", index: 7 }
     ],
-    bacziData,
-    mounthBegin
+
+    generateCalendar,
+    getBacziYear,
+    mounthCaption
   }),
-  methods: {
-    findDayFirstDayInMounth() {
-      const dayCalibration = 17;
-      const oneDayMsec = 24 * 3600;
-      const oneD = moment("1970/01/01").unix();
-      const TwoD = moment(`${this.date.year}/${this.date.mounth}/01`).unix();
-      let day = (Number(TwoD) - Number(oneD)) / Number(oneDayMsec);
-      let operand;
-      let days;
-      if (day < 0) {
-        operand = "-";
-        day = day * -1;
-      } else {
-        operand = "+";
-      }
-      let step = day / 60;
-
-      for (let i = 0; i < Math.floor(step); i++) {
-        day = day - 60;
-      }
-      if (operand == "-") {
-        days = dayCalibration - day;
-        if (days < 0) {
-          days = 60 + days;
-        }
-      } else if (operand == "+") {
-        days = dayCalibration + day;
-        if (days > 59) {
-          days = days - 60;
-        }
-      }
-      return days;
-    },
-    getBacziMount(i) {
-      const getMountCorrection = (
-        yearDate,
-        mounthDate,
-        February = false,
-        yearCorection = null
-      ) => {
-        const year =
-          yearCorection !== null ? yearDate - yearCorection : yearDate;
-        const beginMounth = Number(
-          this.mounthBegin[year][mounthDate].begin_date.match(/(\d+)\.\d+/)[1]
-        );
-        return i < beginMounth
-          ? Number(
-              (February
-                ? this.mounthBegin[year - 1][12]
-                : this.mounthBegin[year][mounthDate - 1]
-              ).mounth_correction
-            )
-          : Number(this.mounthBegin[year][mounthDate].mounth_correction);
-      };
-
-      const MounthBegin =
-        this.date.mounth === 1
-          ? this.mounthBegin[this.date.year - 1][12].begin_date
-          : this.mounthBegin[this.date.year][this.date.mounth - 1].begin_date;
-      return {
-        ...this.bacziData.filter(
-          item =>
-            Number(item.id) ===
-            (this.date.mounth === 1
-              ? getMountCorrection(this.date.year, 12, false, 1)
-              : this.date.mounth === 2
-              ? getMountCorrection(this.date.year, this.date.mounth - 1, true)
-              : getMountCorrection(this.date.year, this.date.mounth - 1))
-        )[0].data,
-        MounthBegin
-      };
-    },
-    getBacziDays() {
-      const getCorrectionNumber = num =>
-        num > 60 ? num - 60 : num < 0 ? 60 + num : num;
-      const getBacziInRange = (first, second) =>
-        this.bacziData.filter(item => item.id >= first && item.id <= second);
-      const getBacziArr = (firstDay, countOfDays) =>
-        60 - countOfDays > firstDay
-          ? getBacziInRange(firstDay, firstDay + countOfDays)
-          : [
-              ...getBacziInRange(firstDay, 60),
-              ...getBacziInRange(
-                0,
-                getCorrectionNumber(
-                  this.findDayFirstDayInMounth() + this.dayInMounth
-                )
-              )
-            ];
-      return getBacziArr(this.findDayFirstDayInMounth(), this.dayInMounth).map(
-        item => item.data
-      );
-    },
-    getBacziYear(i) {
-      const yearBegin = this.mounthBegin[this.date.year][1].begin_date.match(
-        /(\d+)\.(\d+)/
-      );
-      const correction =
-        this.date.mounth === Number(yearBegin[2])
-          ? i < Number(yearBegin[1])
-            ? Number(this.mounthBegin[this.date.year - 1].correction)
-            : Number(this.mounthBegin[this.date.year].correction)
-          : this.date.mounth < Number(yearBegin[2])
-          ? Number(this.mounthBegin[this.date.year - 1].correction)
-          : Number(this.mounthBegin[this.date.year].correction);
-      return this.bacziData.filter(item => Number(item.id) === correction)[0]
-        .data;
-    },
-    mounthCaption() {
-      return this.$store.getters.mounthArray.filter(
-        item => Number(item.id) === this.date.mounth
-      )[0].name;
-    },
-    generateCalendar() {
-      const calendar = [];
-      for (let i = 1; i < this.dayInMounth; i++) {
-        const mounth = { ...this.getBacziMount(i) };
-        const MounthBegin = mounth.MounthBegin;
-        const timeMounthBegin = MounthBegin.match(/\d+:\d+/)[0];
-        const dateMounthBegin = Number(MounthBegin.match(/(\d+)\.\d+/)[1]);
-        const timeOn = i === dateMounthBegin;
-        const day = { ...this.getBacziDays()[i], timeOn, timeMounthBegin };
-        const year = { ...this.getBacziYear(i) };
-        const naIn_day = naIn(day);
-        const naIn_mounth = naIn(mounth);
-        const naIn_year = naIn(year);
-        const fazi = {
-          day: "",
-          mounth: "",
-          year: ""
-        };
-        const caption = [];
-        calendar.push({
-          dayNum: i,
-          glif: {
-            day,
-            mounth,
-            year
-          },
-          naIn: {
-            day: { ...naIn_day },
-            mounth: { ...naIn_mounth },
-            year: { ...naIn_year }
-          },
-          fazi,
-          caption
-        });
-      }
-
-      return whitOutWealth(
-        Loss(
-          Fazi(
-            SHA(directCollision(collisionsCaption(FormationCaption(calendar))))
-          )
-        ),
-        this.date.year
-      );
-    }
-  },
+  methods: {},
   computed: {
     dayInMounth() {
       return !this.isEmptyObject(this.date)
@@ -235,6 +75,9 @@ export default {
             "YYYY/MM"
           ).daysInMonth()
         : null;
+    },
+    mounthArray() {
+      return this.$store.getters.mounthArray;
     },
     weekDay() {
       return this.date

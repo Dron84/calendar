@@ -2,7 +2,13 @@
   <div class="body">
     <div class="item none" v-for="i in weekDay" :key="`${i}_weekDay`"></div>
 
-    <div class="item" v-for="i in calendar" :key="`${i.dayNum}_day`">
+    <router-link
+      tag="div"
+      :to="`/${date.year}-${date.mounth}/${i.dayNum}`"
+      class="item"
+      v-for="i in calendar"
+      :key="`${i.dayNum}_day`"
+    >
       <span class="time" v-if="i.glif.day.timeOn">
         {{
         i.glif.day.timeMounthBegin
@@ -41,7 +47,7 @@
           <li v-for="(cap, index) of i.caption" :key="index">{{ cap }}</li>
         </ul>
       </div>
-    </div>
+    </router-link>
   </div>
 </template>
 <script>
@@ -52,7 +58,8 @@ export default {
   data: () => ({}),
   props: {
     calendar: null,
-    weekDay: null
+    weekDay: null,
+    date: null
   },
   methods: {},
   computed: {}
