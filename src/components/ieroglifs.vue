@@ -1,17 +1,17 @@
 <template>
   <div class="ieroglifs">
-    <span class="numbers" v-if="!ieroglifOnly">{{ieroglif.number}}</span>
+    <span class="numbers" v-if="!ieroglifOnly">{{block.number}}</span>
     <span
       class="sky hoverTitle"
-      :data-title="ieroglif.sky_title"
-      :class="ieroglif.sky_color"
-    >{{ieroglif.sky}}</span>
+      :data-title="block.sky_title"
+      :class="block.sky_color"
+    >{{block.sky}}</span>
     <span
       class="ground hoverTitle"
-      :data-title="`${ieroglif.ground_title} ${ieroglif.caption}`"
-      :class="ieroglif.ground_color"
-    >{{ieroglif.ground}}</span>
-    <span class="numbers" v-if="!ieroglifOnly">{{ieroglif.ground_number}}</span>
+      :data-title="`${block.ground_title} ${block.caption}`"
+      :class="block.ground_color"
+    >{{block.ground}}</span>
+    <span class="numbers" v-if="!ieroglifOnly">{{block.ground_number}}</span>
   </div>
 </template>
 <script>
@@ -20,11 +20,6 @@ export default {
   props: {
     block: { type: Object },
     ieroglifOnly: { type: Boolean, default: false }
-  },
-  computed: {
-    ieroglif() {
-      return this.block;
-    }
   }
 };
 </script>
