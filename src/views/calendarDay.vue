@@ -16,7 +16,7 @@
           <ieroglifs :block="{ ...getBacziYear(15,date) }" :ieroglifOnly="true" />
         </div>
         <div class="mounthCaption">
-          <div class="caption">{{ mounthCaption(mounthArray,date) }}</div>
+          <div class="caption">{{selectDay}}&nbsp;{{ mounthCaption(mounthArray,date) }}</div>
         </div>
       </aside>
       <header />
@@ -60,7 +60,7 @@ export default {
         : null;
     },
     mounthArray() {
-      return this.$store.getters.mounthArray;
+      return this.$store.getters.mounthArrayForDay;
     },
     date() {
       const date = this.$route.params.date.match(/(\d+)-(\d+)/);

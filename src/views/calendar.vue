@@ -93,6 +93,8 @@ export default {
 
 <style lang="sass">
 @import ../assets/vars
+.accent
+  color: $accent
 .calendar
   height: 100vh
   color: $text_on_normal
@@ -137,6 +139,8 @@ export default {
           transform: rotateZ(-90deg)
           font-size: 5em
           color: white
+          text-align: center
+          white-space: nowrap
     header
       grid-area: heads
       height: 80px

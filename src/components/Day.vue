@@ -62,7 +62,7 @@
     </div>
     <div class="dayCaptions">
       <div v-for="(item,index) in dayCaptions" :key="index">
-        <p class="red">{{item.title}}</p>
+        <p :class="[item.type ==='bad' ? 'red': 'accent' ]">{{item.title}}</p>
         <p>{{item.caption}}</p>
       </div>
       {{dayCaptions}}
@@ -76,6 +76,8 @@
 import { CalculateHours } from "../JS/methods/calculateHours";
 import { notUseHour } from "../JS/methods/notUseHour";
 import { collisions } from "../JS/methods/collisions";
+import { emptiness } from "../JS/methods/emptiness";
+import punishments from "../JS/methods/punishments";
 import ieroglifs from "../components/ieroglifs";
 
 export default {
@@ -84,6 +86,7 @@ export default {
     CalculateHours,
     collisions,
     notUseHour,
+    emptiness,
     selectedDay: null,
     dayCaptions: []
   }),
@@ -96,14 +99,17 @@ export default {
     daySelect(index) {
       this.dayCaptions = [];
       this.selectedDay = index;
-      const caption = (title, caption) => ({ title, caption });
-      const hours = CalculateHours(this.DayInfo[0].glif.day)[index];
+      const caption = (title, caption, type = "bad") => ({
+        title,
+        caption,
+        type
+      });
+      const day = this.DayInfo[0].glif.day;
+      const hour = CalculateHours(day)[index];
+      const mounth = this.DayInfo[0].glif.mounth;
+
       // (firstGround, secondGround, caption)
-      const collision = this.collisions(
-        this.DayInfo[0].glif.day.ground,
-        hours.ground,
-        "true"
-      );
+      const collision = this.collisions(day.ground, hour.ground, "true");
       collision &&
         this.dayCaptions.push(
           caption(
@@ -113,21 +119,64 @@ export default {
         );
 
       //(daySky, hourSky)
-      console.log(
-        ` this.DayInfo[0].glif.day.sky`,
-        this.DayInfo[0].glif.day.sky
-      );
-      console.log(` hours.sky`, hours.sky);
-      const notUseHour = this.notUseHour(
-        this.DayInfo[0].glif.day.sky,
-        hours.sky
-      );
-      console.log(`notUseHour`, notUseHour);
+      const notUseHour = this.notUseHour(day.sky, hour.sky);
       notUseHour &&
         this.dayCaptions.push(
           caption(
             `Неиспользуемый час. `,
             `Энергии часа конфликтуют с энергиями дня. Не выбирайте этот час. `
+          )
+        );
+      // (firstSky, firstGround, secondGround)
+      const emptiness = this.emptiness(day.sky, day.ground, hour.ground);
+      emptiness &&
+        this.dayCaptions.push(
+          caption(
+            `Пустой час. `,
+            `Энергии в этом часе отсутствуют. Желаемого результата не будет. `
+          )
+        );
+
+      const punshNotLove = punishments.notLove(hour.ground, day.ground);
+      punshNotLove &&
+        this.dayCaptions.push(
+          caption(
+            `Наказание нелюбви. `,
+            `Не стоит использовать этот час для встреч, свиданий.`
+          )
+        );
+
+      const punshSelf = punishments.self(hour.ground, day.ground);
+      punshSelf &&
+        this.dayCaptions.push(
+          caption(
+            `Самонаказание. `,
+            `Человек сам себя наказывает, необдуманные поступки.`
+          )
+        );
+      const punshFire = punishments.fire(
+        hour.ground,
+        day.ground,
+        mounth.ground
+      );
+      punshFire &&
+        this.dayCaptions.push(
+          caption(
+            `Огненное наказание. `,
+            `Излишняя активность, приносящая ошибки. Осторожно за рулем!`
+          )
+        );
+
+      const punshGround = punishments.ground(
+        hour.ground,
+        day.ground,
+        mounth.ground
+      );
+      punshGround &&
+        this.dayCaptions.push(
+          caption(
+            `Земное наказание. `,
+            `Депрессивность, самокопание. Осторожно за рулём!`
           )
         );
     }
