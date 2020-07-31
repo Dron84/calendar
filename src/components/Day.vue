@@ -76,8 +76,9 @@
 import { CalculateHours } from "../JS/methods/calculateHours";
 import { notUseHour } from "../JS/methods/notUseHour";
 import { collisions } from "../JS/methods/collisions";
-import { emptiness } from "../JS/methods/emptiness";
+import { emptiness, roadEmptiness } from "../JS/methods/emptiness";
 import punishments from "../JS/methods/punishments";
+import { marginBranches, harmBranches } from "../JS/methods/marginBranches";
 import ieroglifs from "../components/ieroglifs";
 
 export default {
@@ -87,6 +88,7 @@ export default {
     collisions,
     notUseHour,
     emptiness,
+
     selectedDay: null,
     dayCaptions: []
   }),
@@ -119,8 +121,7 @@ export default {
         );
 
       //(daySky, hourSky)
-      const notUseHour = this.notUseHour(day.sky, hour.sky);
-      notUseHour &&
+      this.notUseHour(day.sky, hour.sky) &&
         this.dayCaptions.push(
           caption(
             `Неиспользуемый час. `,
@@ -128,8 +129,7 @@ export default {
           )
         );
       // (firstSky, firstGround, secondGround)
-      const emptiness = this.emptiness(day.sky, day.ground, hour.ground);
-      emptiness &&
+      this.emptiness(day.sky, day.ground, hour.ground) &&
         this.dayCaptions.push(
           caption(
             `Пустой час. `,
@@ -137,8 +137,7 @@ export default {
           )
         );
 
-      const punshNotLove = punishments.notLove(hour.ground, day.ground);
-      punshNotLove &&
+      punishments.notLove(hour.ground, day.ground) &&
         this.dayCaptions.push(
           caption(
             `Наказание нелюбви. `,
@@ -146,20 +145,14 @@ export default {
           )
         );
 
-      const punshSelf = punishments.self(hour.ground, day.ground);
-      punshSelf &&
+      punishments.self(hour.ground, day.ground) &&
         this.dayCaptions.push(
           caption(
             `Самонаказание. `,
             `Человек сам себя наказывает, необдуманные поступки.`
           )
         );
-      const punshFire = punishments.fire(
-        hour.ground,
-        day.ground,
-        mounth.ground
-      );
-      punshFire &&
+      punishments.fire(hour.ground, day.ground, mounth.ground) &&
         this.dayCaptions.push(
           caption(
             `Огненное наказание. `,
@@ -167,16 +160,31 @@ export default {
           )
         );
 
-      const punshGround = punishments.ground(
-        hour.ground,
-        day.ground,
-        mounth.ground
-      );
-      punshGround &&
+      punishments.ground(hour.ground, day.ground, mounth.ground) &&
         this.dayCaptions.push(
           caption(
             `Земное наказание. `,
             `Депрессивность, самокопание. Осторожно за рулём!`
+          )
+        );
+
+      marginBranches(hour.ground, day.ground) &&
+        this.dayCaptions.push(
+          caption(
+            `Слияние ветвей. `,
+            `Энергия часа способствует налаживанию отношений, переговорам.  `,
+            "good"
+          )
+        );
+      harmBranches(hour.ground, day.ground) &&
+        this.dayCaptions.push(
+          caption(`Вред ветвей. `, `Сложности, препятствия, возможен обман.`)
+        );
+      roadEmptiness(hour.sky) &&
+        this.dayCaptions.push(
+          caption(
+            `Пустота дорог. `,
+            `Неблагоприятный час для выхода из дома, особенно для путешествий. `
           )
         );
     }

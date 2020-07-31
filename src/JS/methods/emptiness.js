@@ -71,3 +71,5 @@ export const emptiness = (firstSky, firstGround, secondGround) =>
         (firstSky === "壬" && firstGround === "戌") ||
         (firstSky === "癸" && firstGround === "亥")) &&
       true;
+
+export const roadEmptiness = sky => (sky === "癸" || sky === "壬") && true;
