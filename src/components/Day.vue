@@ -1,14 +1,5 @@
 <template>
   <div class="dayInfo">
-    <div class="hours">
-      <div class="hour" v-for="hour in CalculateHours(DayInfo[0].glif.day)" :key="hour.time">
-        <div class="time">{{hour.time}}</div>
-        <div class="number">{{hour.number}}</div>
-        <div class="sky" :class="hour.sky_color">{{hour.sky}}</div>
-        <div class="ground" :class="hour.ground_color">{{hour.ground}}</div>
-        <div class="caption">{{hour.timeCaption}}</div>
-      </div>
-    </div>
     <div class="dayGlif">
       <div class="glif">
         <div class="day">
@@ -46,33 +37,101 @@
           :data-title="DayInfo[0].fazi.year"
         >{{DayInfo[0].fazi.year.slice(0,3)}}</div>
       </div>
-      <div class="caption">
-        <ul>
-          <li v-for="(cap, index) of DayInfo[0].caption" :key="index">{{ cap }}</li>
-        </ul>
+    </div>
+    <div class="caption">
+      <ul>
+        <li v-for="(cap, index) of DayInfo[0].caption" :key="index">{{ cap }}</li>
+      </ul>
+    </div>
+    <div class="hours">
+      <div
+        class="hour"
+        v-for="(hour,index) in CalculateHours(DayInfo[0].glif.day)"
+        :key="hour.time"
+        :class="{'active': selectedDay === index}"
+        @click="daySelect(index)"
+      >
+        <div class="time">{{hour.time}}</div>
+        <div class="number">{{hour.number}}</div>
+        <div class="sky" :class="hour.sky_color">{{hour.sky}}</div>
+        <div class="ground" :class="hour.ground_color">{{hour.ground}}</div>
+        <div class="caption">{{hour.timeCaption}}</div>
+        <div class="naIn" :class="hour.naIn.color">{{hour.naIn.caption}}</div>
+        <div class="fazi hoverTitle" :data-title="hour.fazi">{{hour.fazi.slice(0,3)}}</div>
       </div>
     </div>
-
+    <div class="dayCaptions">
+      <div v-for="(item,index) in dayCaptions" :key="index">
+        <p class="red">{{item.title}}</p>
+        <p>{{item.caption}}</p>
+      </div>
+      {{dayCaptions}}
+    </div>
     <!-- <clock /> -->
   </div>
 </template>
 <script>
 // import clock from "./clock";
 
-import { CalculateHours } from "../JS/methods/index";
+import { CalculateHours } from "../JS/methods/calculateHours";
+import { notUseHour } from "../JS/methods/notUseHour";
+import { collisions } from "../JS/methods/collisions";
 import ieroglifs from "../components/ieroglifs";
 
 export default {
   name: "day",
   data: () => ({
-    CalculateHours
+    CalculateHours,
+    collisions,
+    notUseHour,
+    selectedDay: null,
+    dayCaptions: []
   }),
   props: {
     selectDay: null,
     calendar: { type: Array }
   },
   components: { ieroglifs },
-  methods: {},
+  methods: {
+    daySelect(index) {
+      this.dayCaptions = [];
+      this.selectedDay = index;
+      const caption = (title, caption) => ({ title, caption });
+      const hours = CalculateHours(this.DayInfo[0].glif.day)[index];
+      // (firstGround, secondGround, caption)
+      const collision = this.collisions(
+        this.DayInfo[0].glif.day.ground,
+        hours.ground,
+        "true"
+      );
+      collision &&
+        this.dayCaptions.push(
+          caption(
+            `Разрушитель дня. `,
+            `Энергии часа конфликтуют с энергиями дня. Не выбирайте этот час.`
+          )
+        );
+
+      //(daySky, hourSky)
+      console.log(
+        ` this.DayInfo[0].glif.day.sky`,
+        this.DayInfo[0].glif.day.sky
+      );
+      console.log(` hours.sky`, hours.sky);
+      const notUseHour = this.notUseHour(
+        this.DayInfo[0].glif.day.sky,
+        hours.sky
+      );
+      console.log(`notUseHour`, notUseHour);
+      notUseHour &&
+        this.dayCaptions.push(
+          caption(
+            `Неиспользуемый час. `,
+            `Энергии часа конфликтуют с энергиями дня. Не выбирайте этот час. `
+          )
+        );
+    }
+  },
   computed: {
     DayInfo() {
       return this.calendar.filter(item => item.dayNum == this.selectDay);
@@ -98,17 +157,25 @@ export default {
     justify-content: center
     align-items: center
     text-align: center
+    transition: all .2s linear
+    box-sizing: border-box
     .time
       font-size: .8em
     .sky,.ground
       font-size: 2.2em
+    &:hover
+      cursor: pointer
+      transform: scale(1.1)
+    &.active
+      border: 2px solid $selectDay
+      z-index: 1000
 .dayGlif
-  display: grid
+  display: inline-grid
   margin: 20px
   padding: 10px 0
   width: 210px
-  grid-template-areas: 'glif' 'naIn' 'fazi'
-  grid-template-columns: 1fr
+  grid-template-areas: 'glif' 'naIn' 'fazi' 'caption'
+  grid-template-columns: 1fr 11fr
   border: 1px solid $accent
   .glif
     display: grid
@@ -149,8 +216,9 @@ export default {
     grid-area: fazi
     .day, .mounth, .year
       font-size: .9em
-  .caption
-    padding: 10px
-    ul
-      list-style: none
+.caption
+  padding: 10px
+  display: inline-flex
+  ul
+    list-style: none
 </style>
