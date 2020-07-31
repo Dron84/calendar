@@ -65,7 +65,7 @@
         <p :class="[item.type ==='bad' ? 'red': 'accent' ]">{{item.title}}</p>
         <p>{{item.caption}}</p>
       </div>
-      {{dayCaptions}}
+      <!-- {{dayCaptions}} -->
     </div>
     <!-- <clock /> -->
   </div>
@@ -79,6 +79,7 @@ import { collisions } from "../JS/methods/collisions";
 import { emptiness, roadEmptiness } from "../JS/methods/emptiness";
 import punishments from "../JS/methods/punishments";
 import { marginBranches, harmBranches } from "../JS/methods/marginBranches";
+import { nobleMan } from "../JS/methods/nobleMan";
 import ieroglifs from "../components/ieroglifs";
 
 export default {
@@ -185,6 +186,14 @@ export default {
           caption(
             `Пустота дорог. `,
             `Неблагоприятный час для выхода из дома, особенно для путешествий. `
+          )
+        );
+      nobleMan(day.sky, hour.ground) &&
+        this.dayCaptions.push(
+          caption(
+            `Благородный Помощник. `,
+            `Поддержка небес, дополнительная защита и помощь.`,
+            "good"
           )
         );
     }
