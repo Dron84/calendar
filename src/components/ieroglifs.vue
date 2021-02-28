@@ -1,17 +1,19 @@
 <template>
   <div class="ieroglifs">
-    <span class="numbers" v-if="!ieroglifOnly">{{block.number}}</span>
+    <span class="numbers" v-if="!ieroglifOnly">{{ block.number }}</span>
     <span
       class="sky hoverTitle"
       :data-title="block.sky_title"
       :class="block.sky_color"
-    >{{block.sky}}</span>
+      >{{ block.sky }}</span
+    >
     <span
       class="ground hoverTitle"
       :data-title="`${block.ground_title} ${block.caption}`"
       :class="block.ground_color"
-    >{{block.ground}}</span>
-    <span class="numbers" v-if="!ieroglifOnly">{{block.ground_number}}</span>
+      >{{ block.ground }}</span
+    >
+    <span class="numbers" v-if="!ieroglifOnly">{{ block.ground_number }}</span>
   </div>
 </template>
 <script>

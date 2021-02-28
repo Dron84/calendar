@@ -10,9 +10,7 @@
       :key="`${i.dayNum}_day`"
     >
       <span class="time" v-if="i.glif.day.timeOn">
-        {{
-        i.glif.day.timeMounthBegin
-        }}
+        {{ i.glif.day.timeMounthBegin }}
       </span>
       <span class="dayNum">{{ i.dayNum }}</span>
       <div class="glif">
@@ -38,23 +36,31 @@
         </div>
       </div>
       <div class="fazi">
-        <div class="day hoverTitle" :data-title="i.fazi.day">{{i.fazi.day.slice(0,3)}}</div>
-        <div class="mounth hoverTitle" :data-title="i.fazi.mounth">{{i.fazi.mounth.slice(0,3)}}</div>
-        <div class="year hoverTitle" :data-title="i.fazi.year">{{i.fazi.year.slice(0,3)}}</div>
+        <div class="day hoverTitle" :data-title="i.fazi.day">
+          {{ i.fazi.day.slice(0, 3) }}
+        </div>
+        <div class="mounth hoverTitle" :data-title="i.fazi.mounth">
+          {{ i.fazi.mounth.slice(0, 3) }}
+        </div>
+        <div class="year hoverTitle" :data-title="i.fazi.year">
+          {{ i.fazi.year.slice(0, 3) }}
+        </div>
       </div>
       <div class="caption">
         <ul>
           <li v-for="(cap, index) of i.caption" :key="index">{{ cap }}</li>
         </ul>
       </div>
+      <DayIndicator :caption="i.caption" />
     </router-link>
   </div>
 </template>
 <script>
 import ieroglifs from "../components/ieroglifs";
+import DayIndicator from "../components/DayIndicator";
 export default {
   name: "calendarDay",
-  components: { ieroglifs },
+  components: { ieroglifs, DayIndicator },
   data: () => ({}),
   props: {
     calendar: null,
@@ -80,7 +86,7 @@ export default {
     grid-template-areas: 'glif' 'naIn' 'fazi' 'caption'
     grid-template-rows: .33fr .33fr 20px .33fr
     border: 1px solid $accent
-    padding: 40px 0 20px 0
+    padding: 40px 0 35px 0
     .time
       height: 30px
       position: absolute
@@ -101,7 +107,7 @@ export default {
       border-bottom: 1px solid $accent
       border-radius: 0 0 5px 0
       width: 30px
-      top: -6px
+      top: 0px
       left: -5px
       font-size: 1em
       display: flex

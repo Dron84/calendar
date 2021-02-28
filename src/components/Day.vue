@@ -14,56 +14,65 @@
       </div>
       <div class="naIn">
         <div class="day">
-          <span :class="DayInfo[0].naIn.day.color">{{ DayInfo[0].naIn.day.caption }}</span>
+          <span :class="DayInfo[0].naIn.day.color">{{
+            DayInfo[0].naIn.day.caption
+          }}</span>
         </div>
         <div class="mounth">
-          <span :class="DayInfo[0].naIn.mounth.color">{{ DayInfo[0].naIn.mounth.caption }}</span>
+          <span :class="DayInfo[0].naIn.mounth.color">{{
+            DayInfo[0].naIn.mounth.caption
+          }}</span>
         </div>
         <div class="year">
-          <span :class="DayInfo[0].naIn.year.color">{{ DayInfo[0].naIn.year.caption }}</span>
+          <span :class="DayInfo[0].naIn.year.color">{{
+            DayInfo[0].naIn.year.caption
+          }}</span>
         </div>
       </div>
       <div class="fazi">
-        <div
-          class="day hoverTitle"
-          :data-title="DayInfo[0].fazi.day"
-        >{{DayInfo[0].fazi.day.slice(0,3)}}</div>
-        <div
-          class="mounth hoverTitle"
-          :data-title="DayInfo[0].fazi.mounth"
-        >{{DayInfo[0].fazi.mounth.slice(0,3)}}</div>
-        <div
-          class="year hoverTitle"
-          :data-title="DayInfo[0].fazi.year"
-        >{{DayInfo[0].fazi.year.slice(0,3)}}</div>
+        <div class="day hoverTitle" :data-title="DayInfo[0].fazi.day">
+          {{ DayInfo[0].fazi.day.slice(0, 3) }}
+        </div>
+        <div class="mounth hoverTitle" :data-title="DayInfo[0].fazi.mounth">
+          {{ DayInfo[0].fazi.mounth.slice(0, 3) }}
+        </div>
+        <div class="year hoverTitle" :data-title="DayInfo[0].fazi.year">
+          {{ DayInfo[0].fazi.year.slice(0, 3) }}
+        </div>
       </div>
     </div>
     <div class="caption">
       <ul>
-        <li v-for="(cap, index) of DayInfo[0].caption" :key="index">{{ cap }}</li>
+        <li v-for="(cap, index) of DayInfo[0].caption" :key="index">
+          {{ cap }}
+        </li>
       </ul>
     </div>
     <div class="hours">
       <div
         class="hour"
-        v-for="(hour,index) in CalculateHours(DayInfo[0].glif.day)"
+        v-for="(hour, index) in CalculateHours(DayInfo[0].glif.day)"
         :key="hour.time"
-        :class="{'active': selectedDay === index}"
+        :class="{ active: selectedDay === index }"
         @click="daySelect(index)"
       >
-        <div class="time">{{hour.time}}</div>
-        <div class="number">{{hour.number}}</div>
-        <div class="sky" :class="hour.sky_color">{{hour.sky}}</div>
-        <div class="ground" :class="hour.ground_color">{{hour.ground}}</div>
-        <div class="caption">{{hour.timeCaption}}</div>
-        <div class="naIn" :class="hour.naIn.color">{{hour.naIn.caption}}</div>
-        <div class="fazi hoverTitle" :data-title="hour.fazi">{{hour.fazi.slice(0,3)}}</div>
+        <div class="time">{{ hour.time }}</div>
+        <div class="number">{{ hour.number }}</div>
+        <div class="sky" :class="hour.sky_color">{{ hour.sky }}</div>
+        <div class="ground" :class="hour.ground_color">{{ hour.ground }}</div>
+        <div class="caption">{{ hour.timeCaption }}</div>
+        <div class="naIn" :class="hour.naIn.color">{{ hour.naIn.caption }}</div>
+        <div class="fazi hoverTitle" :data-title="hour.fazi">
+          {{ hour.fazi.slice(0, 3) }}
+        </div>
       </div>
     </div>
     <div class="dayCaptions">
-      <div v-for="(item,index) in dayCaptions" :key="index">
-        <p :class="[item.type ==='bad' ? 'red': 'accent' ]">{{item.title}}</p>
-        <p>{{item.caption}}</p>
+      <div v-for="(item, index) in dayCaptions" :key="index">
+        <p :class="[item.type === 'bad' ? 'red' : 'accent']">
+          {{ item.title }}
+        </p>
+        <p>{{ item.caption }}</p>
       </div>
       <!-- {{dayCaptions}} -->
     </div>

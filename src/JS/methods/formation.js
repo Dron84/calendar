@@ -1,12 +1,12 @@
 import store from "../../store";
 
-export const FormationCaption = (calendar) => {
+export const FormationCaption = calendar => {
   /// установление
   const formation = store.getters.formation;
   let id = calendar.filter(
-    (item) => item.glif.day.ground === item.glif.mounth.ground
+    item => item.glif.day.ground === item.glif.mounth.ground
   );
-  id.map((day) => {
+  id.map(day => {
     calendar.map((item, index) => {
       let dopIndex = false;
       if (item.dayNum === day.dayNum) {

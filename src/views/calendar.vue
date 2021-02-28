@@ -5,7 +5,9 @@
         <img src="https://nadezhda-kalinina.com/img/icon/logo.svg" />
       </div>
       <div class="info">
-        <h1>Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.</h1>
+        <h1>
+          Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.
+        </h1>
         <dates v-model="date" />
       </div>
     </div>
@@ -13,17 +15,26 @@
     <div class="wrapper">
       <aside>
         <div class="year white_bg sideMargin">
-          <ieroglifs :block="{ ...getBacziYear(15,date) }" :ieroglifOnly="true" />
+          <ieroglifs
+            :block="{ ...getBacziYear(15, date) }"
+            :ieroglifOnly="true"
+          />
         </div>
         <div class="mounthCaption">
-          <div class="caption">{{ mounthCaption(mounthArray,date) }}</div>
+          <div class="caption">{{ mounthCaption(mounthArray, date) }}</div>
         </div>
       </aside>
       <header>
-        <span v-for="day in Array.from(daysTitle)" :key="day.index">{{ day.nameRu }}</span>
+        <span v-for="day in Array.from(daysTitle)" :key="day.index">{{
+          day.nameRu
+        }}</span>
       </header>
 
-      <calendarDay :calendar="generateCalendar(date,dayInMounth)" :weekDay="weekDay" :date="date" />
+      <calendarDay
+        :calendar="generateCalendar(date, dayInMounth)"
+        :weekDay="weekDay"
+        :date="date"
+      />
     </div>
   </div>
 </template>

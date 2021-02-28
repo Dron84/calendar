@@ -1,4 +1,4 @@
-export const naIn = (stolp) => {
+export const naIn = stolp => {
   if (
     (stolp.sky === "戊" && stolp.ground === "子") ||
     (stolp.sky === "己" && stolp.ground === "丑") ||

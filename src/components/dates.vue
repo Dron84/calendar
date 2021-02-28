@@ -1,7 +1,7 @@
 <template>
   <div class="dates">
     <span class="btn onHover" @click="minus">&lt;</span>
-    <select class="mounth onHover" type="text" v-model="values.mounth" >
+    <select class="mounth onHover" type="text" v-model="values.mounth">
       <option :value="item.id" v-for="item in mounthArray" :key="item.id">{{
         item.name
       }}</option>
@@ -22,7 +22,7 @@ export default {
     year: 0
   }),
   props: {
-    value: {type: Object},
+    value: { type: Object }
   },
   methods: {
     minus() {
@@ -38,21 +38,24 @@ export default {
         this.values.year++;
       };
       this.values.mounth == 12 ? plusYear() : this.values.mounth++;
-    },
-
+    }
   },
   computed: {
     values: {
-      get(){return this.value},
-      set(val){this.$emit('input',{ mounth: val.mounth, year: val.year })}
+      get() {
+        return this.value;
+      },
+      set(val) {
+        this.$emit("input", { mounth: val.mounth, year: val.year });
+      }
     },
     yearsArray() {
-      return this.$store.getters.yearsArray
+      return this.$store.getters.yearsArray;
     },
     mounthArray() {
-      return this.$store.getters.mounthArray
-    },
-  },
+      return this.$store.getters.mounthArray;
+    }
+  }
 };
 </script>
 <style scoped lang="sass">

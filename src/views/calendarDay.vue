@@ -5,22 +5,31 @@
         <img src="https://nadezhda-kalinina.com/img/icon/logo.svg" />
       </div>
       <div class="info">
-        <h1>Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.</h1>
+        <h1>
+          Китайский календарь. Выбор дат. Энергии часа, дня, месяца и года.
+        </h1>
         <dates v-model="date" />
       </div>
     </div>
-
     <div class="wrapper">
       <aside>
         <div class="year white_bg sideMargin">
-          <ieroglifs :block="{ ...getBacziYear(15,date) }" :ieroglifOnly="true" />
+          <ieroglifs
+            :block="{ ...getBacziYear(15, date) }"
+            :ieroglifOnly="true"
+          />
         </div>
         <div class="mounthCaption">
-          <div class="caption">{{selectDay}}&nbsp;{{ mounthCaption(mounthArray,date) }}</div>
+          <div class="caption">
+            {{ selectDay }}&nbsp;{{ mounthCaption(mounthArray, date) }}
+          </div>
         </div>
       </aside>
       <header />
-      <Day :selectDay="selectDay" :calendar="generateCalendar(date,dayInMounth)" />
+      <Day
+        :selectDay="selectDay"
+        :calendar="generateCalendar(date, dayInMounth)"
+      />
     </div>
   </div>
 </template>

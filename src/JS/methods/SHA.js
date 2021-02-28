@@ -1,6 +1,6 @@
 import { isEmptyObject } from "./index";
 
-export const SHA = (calendar) => {
+export const SHA = calendar => {
   //Поиск ША
 
   const findSHA = (firstGroung, secondGround, caption) => {
@@ -103,7 +103,7 @@ export const SHA = (calendar) => {
 
     return result;
   };
-  calendar.map((item) => {
+  calendar.map(item => {
     const year = findSHA(item.glif.year.ground, item.glif.day.ground, "года");
     const mounth = findSHA(
       item.glif.mounth.ground,

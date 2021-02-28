@@ -25,7 +25,7 @@ const getLoss = (mounthGround, day) =>
     ? "Потеря"
     : null;
 
-const fullLoss = (day) =>
+const fullLoss = day =>
   (day.sky === "辛" && day.ground === "酉") ||
   (day.sky === "癸" && day.ground === "亥") ||
   (day.sky === "乙" && day.ground === "卯") ||
@@ -33,8 +33,8 @@ const fullLoss = (day) =>
     ? "Истинная потеря"
     : null;
 
-export const Loss = (calendar) => {
-  calendar.map((item) => {
+export const Loss = calendar => {
+  calendar.map(item => {
     const loss = getLoss(item.glif.mounth.ground, item.glif.day);
     const fullloss = fullLoss(item.glif.day);
     !isEmptyObject(loss) && item.caption.push(loss);

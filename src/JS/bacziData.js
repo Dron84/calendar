@@ -16,8 +16,8 @@ export default [
       ground_color: "blue",
       caption: "Дерев. Крыса",
       sky_color: "green",
-      ground_number: '1'
-    },
+      ground_number: "1"
+    }
   },
   {
     id: "2",
@@ -36,8 +36,8 @@ export default [
       ground_color: "brown",
       caption: "Дерев. Бык",
       sky_color: "green",
-      ground_number: '6'
-    },
+      ground_number: "6"
+    }
   },
   {
     id: "3",
@@ -56,8 +56,8 @@ export default [
       ground_color: "green",
       caption: "Огнен. Тигр",
       sky_color: "red",
-      ground_number: '4'
-    },
+      ground_number: "4"
+    }
   },
   {
     id: "4",
@@ -76,8 +76,8 @@ export default [
       ground_color: "green",
       caption: "Огнен. Кролик",
       sky_color: "red",
-      ground_number: '9'
-    },
+      ground_number: "9"
+    }
   },
   {
     id: "5",
@@ -96,8 +96,8 @@ export default [
       ground_color: "brown",
       caption: "Земл. Драк.",
       sky_color: "brown",
-      ground_number: '6'
-    },
+      ground_number: "6"
+    }
   },
   {
     id: "6",
@@ -116,8 +116,8 @@ export default [
       ground_color: "red",
       caption: "Земл. Змея",
       sky_color: "brown",
-      ground_number: '2'
-    },
+      ground_number: "2"
+    }
   },
   {
     id: "7",
@@ -136,8 +136,8 @@ export default [
       ground_color: "red",
       caption: "Метал Лошадь",
       sky_color: "gray",
-      ground_number: '9'
-    },
+      ground_number: "9"
+    }
   },
   {
     id: "8",
@@ -156,8 +156,8 @@ export default [
       ground_color: "brown",
       caption: "Метал. Коза",
       sky_color: "gray",
-      ground_number: '3'
-    },
+      ground_number: "3"
+    }
   },
   {
     id: "9",
@@ -176,8 +176,8 @@ export default [
       ground_color: "gray",
       caption: "Водн. Обез.",
       sky_color: "blue",
-      ground_number: '7'
-    },
+      ground_number: "7"
+    }
   },
   {
     id: "10",
@@ -196,8 +196,8 @@ export default [
       ground_color: "gray",
       caption: "Водн. Петух",
       sky_color: "blue",
-      ground_number: '7'
-    },
+      ground_number: "7"
+    }
   },
   {
     id: "11",
@@ -216,8 +216,8 @@ export default [
       ground_color: "brown",
       caption: "Дерев. Собака",
       sky_color: "green",
-      ground_number: '2'
-    },
+      ground_number: "2"
+    }
   },
   {
     id: "12",
@@ -236,8 +236,8 @@ export default [
       ground_color: "blue",
       caption: "Дерев. Свинья",
       sky_color: "green",
-      ground_number: '3'
-    },
+      ground_number: "3"
+    }
   },
   {
     id: "13",
@@ -256,8 +256,8 @@ export default [
       ground_color: "blue",
       caption: "Огнен. Крыса",
       sky_color: "red",
-      ground_number: '3'
-    },
+      ground_number: "3"
+    }
   },
   {
     id: "14",
@@ -276,8 +276,8 @@ export default [
       ground_color: "brown",
       caption: "Огнен. Бык",
       sky_color: "red",
-      ground_number: '7'
-    },
+      ground_number: "7"
+    }
   },
   {
     id: "15",
@@ -296,8 +296,8 @@ export default [
       ground_color: "green",
       caption: "Земл. Тигр",
       sky_color: "brown",
-      ground_number: '6'
-    },
+      ground_number: "6"
+    }
   },
   {
     id: "16",
@@ -316,8 +316,8 @@ export default [
       ground_color: "green",
       caption: "Земл. Кролик",
       sky_color: "brown",
-      ground_number: '8'
-    },
+      ground_number: "8"
+    }
   },
   {
     id: "17",
@@ -336,8 +336,8 @@ export default [
       ground_color: "brown",
       caption: "Метал. Дракон",
       sky_color: "gray",
-      ground_number: '9'
-    },
+      ground_number: "9"
+    }
   },
   {
     id: "18",
@@ -356,8 +356,8 @@ export default [
       ground_color: "red",
       caption: "Метал. Змея",
       sky_color: "gray",
-      ground_number: '7'
-    },
+      ground_number: "7"
+    }
   },
   {
     id: "19",
@@ -376,8 +376,8 @@ export default [
       ground_color: "red",
       caption: "Водн. Лошадь",
       sky_color: "blue",
-      ground_number: '1'
-    },
+      ground_number: "1"
+    }
   },
   {
     id: "20",
@@ -396,8 +396,8 @@ export default [
       ground_color: "brown",
       caption: "Водн. Коза",
       sky_color: "blue",
-      ground_number: '8'
-    },
+      ground_number: "8"
+    }
   },
   {
     id: "21",
@@ -416,8 +416,8 @@ export default [
       ground_color: "gray",
       caption: "Дерев. Обез.",
       sky_color: "green",
-      ground_number: '9'
-    },
+      ground_number: "9"
+    }
   },
   {
     id: "22",
@@ -436,8 +436,8 @@ export default [
       ground_color: "gray",
       caption: "Дерев. Петух",
       sky_color: "green",
-      ground_number: '4'
-    },
+      ground_number: "4"
+    }
   },
   {
     id: "23",
@@ -456,8 +456,8 @@ export default [
       ground_color: "brown",
       caption: "Огнен. Собака",
       sky_color: "red",
-      ground_number: '1'
-    },
+      ground_number: "1"
+    }
   },
   {
     id: "24",
@@ -476,8 +476,8 @@ export default [
       ground_color: "blue",
       caption: "Огнен. Свинья",
       sky_color: "red",
-      ground_number: '8'
-    },
+      ground_number: "8"
+    }
   },
   {
     id: "25",
@@ -496,8 +496,8 @@ export default [
       ground_color: "blue",
       caption: "Земл. Крыса",
       sky_color: "brown",
-      ground_number: '4'
-    },
+      ground_number: "4"
+    }
   },
   {
     id: "26",
@@ -516,8 +516,8 @@ export default [
       ground_color: "brown",
       caption: "Земл. Бык",
       sky_color: "brown",
-      ground_number: '2'
-    },
+      ground_number: "2"
+    }
   },
   {
     id: "27",
@@ -536,8 +536,8 @@ export default [
       ground_color: "green",
       caption: "Метал. Тигр",
       sky_color: "gray",
-      ground_number: '1'
-    },
+      ground_number: "1"
+    }
   },
   {
     id: "28",
@@ -556,8 +556,8 @@ export default [
       ground_color: "green",
       caption: "Метал. Кролик",
       sky_color: "gray",
-      ground_number: '3'
-    },
+      ground_number: "3"
+    }
   },
   {
     id: "29",
@@ -576,8 +576,8 @@ export default [
       ground_color: "brown",
       caption: "Водн. Дракон",
       sky_color: "blue",
-      ground_number: '4'
-    },
+      ground_number: "4"
+    }
   },
   {
     id: "30",
@@ -596,8 +596,8 @@ export default [
       ground_color: "red",
       caption: "Водн. Змея",
       sky_color: "blue",
-      ground_number: '6'
-    },
+      ground_number: "6"
+    }
   },
   {
     id: "31",
@@ -616,8 +616,8 @@ export default [
       ground_color: "red",
       caption: "Дерев. Лошадь",
       sky_color: "green",
-      ground_number: '1'
-    },
+      ground_number: "1"
+    }
   },
   {
     id: "32",
@@ -636,8 +636,8 @@ export default [
       ground_color: "brown",
       caption: "Дерев. Коза",
       sky_color: "green",
-      ground_number: '6'
-    },
+      ground_number: "6"
+    }
   },
   {
     id: "33",
@@ -656,8 +656,8 @@ export default [
       ground_color: "gray",
       caption: "Огнен. Обез.",
       sky_color: "red",
-      ground_number: '4'
-    },
+      ground_number: "4"
+    }
   },
   {
     id: "34",
@@ -676,8 +676,8 @@ export default [
       ground_color: "gray",
       caption: "Огнен. Петух",
       sky_color: "red",
-      ground_number: '9'
-    },
+      ground_number: "9"
+    }
   },
   {
     id: "35",
@@ -696,8 +696,8 @@ export default [
       ground_color: "brown",
       caption: "Земл. Собака",
       sky_color: "brown",
-      ground_number: '6'
-    },
+      ground_number: "6"
+    }
   },
   {
     id: "36",
@@ -716,8 +716,8 @@ export default [
       ground_color: "blue",
       caption: "Земл. Свинья",
       sky_color: "brown",
-      ground_number: '2'
-    },
+      ground_number: "2"
+    }
   },
   {
     id: "37",
@@ -736,8 +736,8 @@ export default [
       ground_color: "blue",
       caption: "Метал. Крыса",
       sky_color: "gray",
-      ground_number: '9'
-    },
+      ground_number: "9"
+    }
   },
   {
     id: "38",
@@ -756,8 +756,8 @@ export default [
       ground_color: "brown",
       caption: "Метал. Бык",
       sky_color: "gray",
-      ground_number: '3'
-    },
+      ground_number: "3"
+    }
   },
   {
     id: "39",
@@ -776,8 +776,8 @@ export default [
       ground_color: "green",
       caption: "Водн. Тигр",
       sky_color: "blue",
-      ground_number: '7'
-    },
+      ground_number: "7"
+    }
   },
   {
     id: "40",
@@ -796,8 +796,8 @@ export default [
       ground_color: "green",
       caption: "Водн. Кролик",
       sky_color: "blue",
-      ground_number: '7'
-    },
+      ground_number: "7"
+    }
   },
   {
     id: "41",
@@ -816,8 +816,8 @@ export default [
       ground_color: "brown",
       caption: "Дерев. Дракон",
       sky_color: "green",
-      ground_number: '2'
-    },
+      ground_number: "2"
+    }
   },
   {
     id: "42",
@@ -836,8 +836,8 @@ export default [
       ground_color: "red",
       caption: "Дерев. Змея",
       sky_color: "green",
-      ground_number: '3'
-    },
+      ground_number: "3"
+    }
   },
   {
     id: "43",
@@ -856,8 +856,8 @@ export default [
       ground_color: "red",
       caption: "Огнен. Лошадь",
       sky_color: "red",
-      ground_number: '3'
-    },
+      ground_number: "3"
+    }
   },
   {
     id: "44",
@@ -876,8 +876,8 @@ export default [
       ground_color: "brown",
       caption: "Огнен. Коза",
       sky_color: "red",
-      ground_number: '7'
-    },
+      ground_number: "7"
+    }
   },
   {
     id: "45",
@@ -896,8 +896,8 @@ export default [
       ground_color: "gray",
       caption: "Земл. Обез.",
       sky_color: "brown",
-      ground_number: '6'
-    },
+      ground_number: "6"
+    }
   },
   {
     id: "46",
@@ -916,8 +916,8 @@ export default [
       ground_color: "gray",
       caption: "Земл. Петух",
       sky_color: "brown",
-      ground_number: '8'
-    },
+      ground_number: "8"
+    }
   },
   {
     id: "47",
@@ -936,8 +936,8 @@ export default [
       ground_color: "brown",
       caption: "Метал. Собака",
       sky_color: "gray",
-      ground_number: '9'
-    },
+      ground_number: "9"
+    }
   },
   {
     id: "48",
@@ -956,8 +956,8 @@ export default [
       ground_color: "blue",
       caption: "Метал. Свинья",
       sky_color: "gray",
-      ground_number: '7'
-    },
+      ground_number: "7"
+    }
   },
   {
     id: "49",
@@ -976,8 +976,8 @@ export default [
       ground_color: "blue",
       caption: "Водн. Крыса",
       sky_color: "blue",
-      ground_number: '1'
-    },
+      ground_number: "1"
+    }
   },
   {
     id: "50",
@@ -996,8 +996,8 @@ export default [
       ground_color: "brown",
       caption: "Водн. <br>Бык",
       sky_color: "blue",
-      ground_number: '8'
-    },
+      ground_number: "8"
+    }
   },
   {
     id: "51",
@@ -1016,8 +1016,8 @@ export default [
       ground_color: "green",
       caption: "Дерев. Тигр",
       sky_color: "green",
-      ground_number: '9'
-    },
+      ground_number: "9"
+    }
   },
   {
     id: "52",
@@ -1036,8 +1036,8 @@ export default [
       ground_color: "green",
       caption: "Дерев. Кролик",
       sky_color: "green",
-      ground_number: '4'
-    },
+      ground_number: "4"
+    }
   },
   {
     id: "53",
@@ -1056,8 +1056,8 @@ export default [
       ground_color: "brown",
       caption: "Огнен. Дракон",
       sky_color: "red",
-      ground_number: '1'
-    },
+      ground_number: "1"
+    }
   },
   {
     id: "54",
@@ -1076,8 +1076,8 @@ export default [
       ground_color: "red",
       caption: "Огнен. Змея",
       sky_color: "red",
-      ground_number: '8'
-    },
+      ground_number: "8"
+    }
   },
   {
     id: "55",
@@ -1096,8 +1096,8 @@ export default [
       ground_color: "red",
       caption: "Земл. Лошадь",
       sky_color: "brown",
-      ground_number: '4'
-    },
+      ground_number: "4"
+    }
   },
   {
     id: "56",
@@ -1116,8 +1116,8 @@ export default [
       ground_color: "brown",
       caption: "Земл. Коза",
       sky_color: "brown",
-      ground_number: '2'
-    },
+      ground_number: "2"
+    }
   },
   {
     id: "57",
@@ -1136,8 +1136,8 @@ export default [
       ground_color: "gray",
       caption: "Метал. Обез.",
       sky_color: "gray",
-      ground_number: '1'
-    },
+      ground_number: "1"
+    }
   },
   {
     id: "58",
@@ -1156,8 +1156,8 @@ export default [
       ground_color: "gray",
       caption: "Метал. Петух",
       sky_color: "gray",
-      ground_number: '3'
-    },
+      ground_number: "3"
+    }
   },
   {
     id: "59",
@@ -1176,8 +1176,8 @@ export default [
       ground_color: "brown",
       caption: "Водн. Собака",
       sky_color: "blue",
-      ground_number: '4'
-    },
+      ground_number: "4"
+    }
   },
   {
     id: "60",
@@ -1196,7 +1196,7 @@ export default [
       ground_color: "blue",
       caption: "Водн. Свинья",
       sky_color: "blue",
-      ground_number: '6'
-    },
-  },
+      ground_number: "6"
+    }
+  }
 ];
