@@ -47,7 +47,9 @@
           {{ cap }}
         </li>
       </ul>
+      <DayIndicator :caption="DayInfo[0].caption" />
     </div>
+
     <div class="hours">
       <div
         class="hour"
@@ -74,8 +76,8 @@
         </p>
         <p>{{ item.caption }}</p>
       </div>
-      <!-- {{dayCaptions}} -->
     </div>
+    
     <!-- <clock /> -->
   </div>
 </template>
@@ -90,6 +92,7 @@ import punishments from "../JS/methods/punishments";
 import { marginBranches, harmBranches } from "../JS/methods/marginBranches";
 import { nobleMan } from "../JS/methods/nobleMan";
 import ieroglifs from "../components/ieroglifs";
+import DayIndicator from '../components/DayIndicator';
 
 export default {
   name: "day",
@@ -106,7 +109,7 @@ export default {
     selectDay: null,
     calendar: { type: Array }
   },
-  components: { ieroglifs },
+  components: { ieroglifs , DayIndicator},
   methods: {
     daySelect(index) {
       this.dayCaptions = [];
@@ -296,4 +299,6 @@ export default {
   display: inline-flex
   ul
     list-style: none
+  div
+    d
 </style>

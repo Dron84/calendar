@@ -173,6 +173,7 @@ const twelve = {
 // "rastovanie",
 // "nachalo_dieti",
 // "razrushenie_postroek",
+32
 
 export default indicatorArray => {
   const good = new Array();

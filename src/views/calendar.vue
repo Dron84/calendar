@@ -179,6 +179,7 @@ export default {
     opacity: 0
     z-index: 99999
     border-radius: 5px
+    text-align: center
   &:hover
     &::after
       visibility: visible

@@ -25,7 +25,7 @@
           </div>
         </div>
       </aside>
-      <header />
+      <header><span class="onHover" @click="goBack()">&lt; Назад</span></header>
       <Day
         :selectDay="selectDay"
         :calendar="generateCalendar(date, dayInMounth)"
@@ -58,7 +58,11 @@ export default {
     generateCalendar,
     getBacziYear
   }),
-  methods: {},
+  methods: {
+    goBack() {
+      history.back();
+    }
+  },
   computed: {
     dayInMounth() {
       return !this.isEmptyObject(this.date)
