@@ -109,6 +109,8 @@ export default {
 .calendar
   height: 100vh
   color: $text_on_normal
+  display: grid
+  grid-template-rows: 140px 1fr
   .header
     display: flex
     align-items: center
@@ -121,6 +123,7 @@ export default {
       div
         justify-self: center
   .wrapper
+    height: 100%
     display: grid
     grid-template-areas: 'asids heads' 'asids bodys'
     grid-template-columns: 1fr 10fr

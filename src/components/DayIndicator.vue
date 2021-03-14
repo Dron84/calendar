@@ -105,7 +105,7 @@ export default {
       this.indicator = String(this.caption[0])
         .match(findReg)
         .map(item => Number(item.replace(".", "").replace(/\s/g, "")));
-      // console.log("this.indicator", this.indicator);
+      console.log("this.indicator", this.indicator);
       const calc = calculation(this.indicator);
       this.good = calc.good;
       this.bad = calc.bad;

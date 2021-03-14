@@ -142,38 +142,6 @@ const twelve = {
   good: ["posechenie_kladbicha", "rastovanie", "otdich"],
   bad: ["vse_dela"]
 };
-// "pokupka_doma",
-// "investirovanie",
-// "poluchenie_nagrad",
-// "vse_dela"
-// "otdich",
-// "razrushenie_postroek"
-// "razdel_imuchestva",
-// "sudebni_process",
-// "pereezd",
-// "duhovnie_praktiki",
-// "dalnie_putushestviya",
-// "otkritie_busnesa",
-// "remont",
-// "planirovanie",
-// "svidaniya",
-// "vstuplenie_vdoljnost",
-// "peregovori",
-// "podpisanie_dogovora",
-// "nachalo_obucheniya",
-// "nachalo_stroitelstva",
-// "nachalo_lecheniya",
-// "nachalo_novogo_proekta",
-// "obrachenie_za_medpomochiu"
-// "zakladka_fundamenta"
-// "svadiba",
-// "posechenie_kladbicha",
-// "zemelnie_raboti",
-// "uborka",
-// "rastovanie",
-// "nachalo_dieti",
-// "razrushenie_postroek",
-32
 
 export default indicatorArray => {
   const good = new Array();
@@ -230,5 +198,5 @@ export default indicatorArray => {
         break;
     }
   }
-  return {good: Array.from(new Set(good)), bad: Array.from(new Set(bad))}
+  return { good: Array.from(new Set(good)), bad: Array.from(new Set(bad)) };
 };
